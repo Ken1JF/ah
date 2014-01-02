@@ -1,0 +1,30 @@
+# File:		ah/README
+# Project:	ahgo
+
+# Author:	Ken Friedenbach
+# Copyright, 2009-2014. 
+# All rights reserved
+ 
+Abstraction Hierarchies are defined in:
+	"Abstrction Hierarchies: A Model of Perception and Cognition in the Game of Go",
+	K.J. Friedenbach, Ph.D. thesis, University of California, Santa Cruz, 1980.
+
+This project is the sixth attempt to implement the model:
+	1. Burroughs Algol, on a Burroughs B5500, 1974-76.
+	2. Early C, on a PDP 11/40, 1980. (Friedenbach thesis version)
+	3. Mesa, on a XEROX Dorado computer, 1980-81.
+	4. Object Pascal, on Apple Lisa and Macintosh, 1981-1988. (Molin thesis version)
+	5. C++, on various Apple and workstations, 1988-1992, 2003-2009.
+	6. Go, on various Apple Macs, Nov. 2009-2014.
+
+The ah package contains the following files:
+    Thesis_no_cover.pdf.zip - scanned Friedenbach thesis in zipped PDF file.
+	board.go		- the board level data structures
+	comp.go			- functions to compute board point and graph node states
+	errors.go		- defines an error handling mechanism
+	gostrings.go	- the string level data structures
+	graph.go		- graph data structures for higher abstraction levels
+	patterns.go		- whole board and partial board patterns of good moves
+	trans.go		- transformations (rotations and reflections) of boards
+	update.go		- the Go abstraction hierarchy and the update algorithm
+	zhash.go		- Zobrist hashing to detect duplicate positions
