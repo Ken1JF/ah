@@ -98,12 +98,12 @@ const (
 	// Move types, for AB, AW, and AE properties:
 	// Note: the "no-op" moves: AB_B, AW_W, and AE_U are not supported.
 	
-	AB_U
-	AB_W
-	AE_B
-	AE_W
-	AW_B
-	AW_U
+	AB_U        // Add Black, was Unoccupied
+	AB_W        // Add Black, was White
+	AE_B        // Add Empty, was Black
+	AE_W        // Add Empty, was White
+	AW_B        // Add White, was Black
+	AW_U        // Add White, was Unoccupied
 		
 	// Unoccupied if PointStatus >= Unocc
 
@@ -389,18 +389,12 @@ func PreviousColor(mTyp PointStatus) (ret PointStatus) {
 		ret = Unocc
 	} else {
 		switch (mTyp) {
-			case AB_U:
+			case AB_U, AW_U:
 				ret = Unocc
-			case AB_W:
+			case AB_W, AE_W:
 				ret = White
-			case AE_B:
+			case AE_B, AW_B:
 				ret = Black
-			case AE_W:
-				ret = White
-			case AW_B:
-				ret = Black
-			case AW_U:
-				ret = Unocc
 			default:
 				ret = CurrentColor(mTyp)	// The "no-op" move types are the only ones not explicitly represented
 		}
