@@ -1,25 +1,24 @@
 /*
  *  File:		src/gitHub.com/Ken1JF/ahgo/ah/errors.go
  *  Project:	abst-hier
- *  
+ *
  *  Created by Ken Friedenbach on 12/08/09.
  *	Copyright 2009-2014, all rights reserved.
  *  Much of this logic is based on the scanner for Go,
  *  whiich may be found in:
  *  		${GOROOT}/src/pkg/go/scanner/
- *  
+ *
  *  Copyright 2009 The Go Authors. All rights reserved.
  *  Use of this source code is governed by a BSD-style
  *  license that can be found in the LICENSE file.
  */
 
-
 package ah
 
 import (
 	"fmt"
-	"sort"
 	"io"
+	"sort"
 )
 
 // Token source positions are represented by a Position value.
@@ -36,7 +35,6 @@ type Position struct {
 // It returns its receiver.
 //
 func (pos *Position) Pos() Position { return *pos }
-
 
 // IsValid returns true if the position is valid.
 //
@@ -60,8 +58,8 @@ func (pos *Position) String() string {
 var NoPos Position
 
 // In an ErrorList, an error is represented by a *ErrorWithPosition.
-// The position Pos, if valid, points to the beginning 
-// of the offending token, and the error condition is described 
+// The position Pos, if valid, points to the beginning
+// of the offending token, and the error condition is described
 // by Msg.
 //
 type ErrorWithPosition struct {
@@ -142,7 +140,7 @@ func (p *ErrorList) RemoveMultiples() {
 // Return the number of errors
 //
 func (p ErrorList) ErrorCount() int {
-    return len(p)
+	return len(p)
 }
 
 // An ErrorList implements the error interface.
@@ -179,5 +177,3 @@ func PrintError(w io.Writer, err error) {
 		fmt.Fprintf(w, "%s\n", err)
 	}
 }
-
-

@@ -11,15 +11,14 @@
 package ah
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"sort"
 	"strconv"
 	"unsafe"
 )
 
 type NodeStatus uint16
-
 
 var ( // TODO: make this a per AbstHier variable
 	TraceAH bool = false
@@ -82,8 +81,8 @@ func GetAHTrace() bool {
 type GraphLevel uint8
 
 const (
-	PointLevel	GraphLevel = iota
-	StringLevel	
+	PointLevel GraphLevel = iota
+	StringLevel
 	BlockLevel
 	GroupLevel
 	RegionLevel
@@ -94,20 +93,19 @@ const (
 //
 type AbstHier struct {
 	// exported temporarily for test_ahgo.go
-	Graphs		[6] Graph 
-//	strs	Graph	// Strings - capture, ko, laddars
-//	blks	Graph	// Blocks - connections, cuts
-//	grps	Graph	// Groups - eyes, life and death
-//	rgns	Graph	// Regions
-//	aras	Graph	// Areas
+	Graphs [6]Graph
+	//	strs	Graph	// Strings - capture, ko, laddars
+	//	blks	Graph	// Blocks - connections, cuts
+	//	grps	Graph	// Groups - eyes, life and death
+	//	rgns	Graph	// Regions
+	//	aras	Graph	// Areas
 	// other Board info:
 	Board
 	// The depth of updating being done:
-	updtLev		GraphLevel
+	updtLev GraphLevel
 	// variables used to control the amount of trace information printed
 	black_nodes, black_members, white_nodes, white_members, unocc_nodes, unocc_members int
-	moves_printed int
-
+	moves_printed                                                                      int
 }
 
 // GetNodeCounts counts nodes and members
@@ -116,12 +114,12 @@ func (abhr *AbstHier) GetNodeCounts(gl GraphLevel) (b_nodes int, b_members int, 
 	var color uint16
 	var count int
 	var memCount int
-	CountNode := func (g *Graph, nl NodeLoc) {
-		if (g.Nodes[nl].lowState == color) || ((PointStatus(color) == Unocc)&&(g.Nodes[nl].lowState != uint16(Black)) && (g.Nodes[nl].lowState != uint16(White))) {
-			count+=1
+	CountNode := func(g *Graph, nl NodeLoc) {
+		if (g.Nodes[nl].lowState == color) || ((PointStatus(color) == Unocc) && (g.Nodes[nl].lowState != uint16(Black)) && (g.Nodes[nl].lowState != uint16(White))) {
+			count += 1
 			abhr.EachMember(gl, nl,
-				func (memNl NodeLoc) {
-					memCount+=1
+				func(memNl NodeLoc) {
+					memCount += 1
 				})
 		}
 	}
@@ -144,10 +142,10 @@ func (abhr *AbstHier) GetNodeCounts(gl GraphLevel) (b_nodes int, b_members int, 
 	abhr.EachNode(gl, CountNode)
 	u_nodes = count
 	u_members = memCount
-//	fmt.Println("Black nodes = ", b_nodes, " Black members = ", b_members);
-//	fmt.Println("White nodes = ", w_nodes, " White members = ", w_members);
-//	fmt.Println("Unocc nodes = ", u_nodes, " Unocc members = ", u_members);
-	
+	//	fmt.Println("Black nodes = ", b_nodes, " Black members = ", b_members);
+	//	fmt.Println("White nodes = ", w_nodes, " White members = ", w_members);
+	//	fmt.Println("Unocc nodes = ", u_nodes, " Unocc members = ", u_members);
+
 	return
 }
 
@@ -157,25 +155,25 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 	var color uint16
 	var count int
 	var memCount int
-	PrintNode := func (g *Graph, nl NodeLoc) {
+	PrintNode := func(g *Graph, nl NodeLoc) {
 		var thisMemCount int
 		// TODO: this is not sufficient for higher levels...
-		if (g.Nodes[nl].lowState == color) || ((PointStatus(color) == Unocc)&&(g.Nodes[nl].lowState != uint16(Black))&&(g.Nodes[nl].lowState != uint16(White) )) {
-			count+=1
+		if (g.Nodes[nl].lowState == color) || ((PointStatus(color) == Unocc) && (g.Nodes[nl].lowState != uint16(Black)) && (g.Nodes[nl].lowState != uint16(White))) {
+			count += 1
 			fmt.Print(nl)
 			fmt.Print(": ", g.Nodes[nl].lowState)
 			fmt.Print(",", g.Nodes[nl].highState)
 			abhr.EachMember(gl, nl,
 				func(memN1 NodeLoc) {
-					thisMemCount+=1
+					thisMemCount += 1
 				})
 			fmt.Print(" ", thisMemCount)
 			fmt.Print("-mem: ")
 			var lo1, hi1 uint16
 			loG := &abhr.Graphs[gl-1]
 			abhr.EachMember(gl, nl,
-				func (memNl NodeLoc) {
-					memCount+=1
+				func(memNl NodeLoc) {
+					memCount += 1
 					if g.gLevel == StringLevel {
 						c, r := GetColRow(memNl)
 						fmt.Print("(", c)
@@ -195,8 +193,8 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 					fmt.Print(", ")
 				})
 			fmt.Print(" adj: ")
-			g.EachIncidentArc(nl, 
-				func (a ArcIdx) {
+			g.EachIncidentArc(nl,
+				func(a ArcIdx) {
 					fNod := g.arcs[a].fromNode
 					if fNod == nl {
 						fmt.Print(g.arcs[a].toNode)
@@ -235,7 +233,7 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 // DecrementMovesPrinted is used when backtracking, i.e. by UndoBoardMove
 //
 func (abhr *AbstHier) DecrementMovesPrinted() {
-	if (abhr.moves_printed > 0) {
+	if abhr.moves_printed > 0 {
 		abhr.moves_printed -= 1
 	}
 }
@@ -243,7 +241,7 @@ func (abhr *AbstHier) DecrementMovesPrinted() {
 // SetBackMovesPrinted is used when moves have changed, i.e. when doing and undoing captures.
 //
 func (abhr *AbstHier) SetBackMovesPrinted(changed int16) {
-	if (abhr.moves_printed > (int(changed) -1) ) {
+	if abhr.moves_printed > (int(changed) - 1) {
 		abhr.moves_printed = int(changed) - 1
 	}
 }
@@ -253,9 +251,9 @@ func (abhr *AbstHier) SetBackMovesPrinted(changed int16) {
 //
 func (abhr *AbstHier) PrintAbstHier(str string, printUnocc bool) {
 	new_black_nodes, new_black_members, new_white_nodes, new_white_members, new_unocc_nodes, new_unocc_members := abhr.GetNodeCounts(StringLevel)
-	if ( (new_black_nodes != abhr.black_nodes) || (new_black_members != abhr.black_members) ||
-		 (new_white_nodes != abhr.white_nodes) || (new_white_members != abhr.white_members) ||
-		 (new_unocc_nodes != abhr.unocc_nodes) || (new_unocc_members != abhr.unocc_members) ) {
+	if (new_black_nodes != abhr.black_nodes) || (new_black_members != abhr.black_members) ||
+		(new_white_nodes != abhr.white_nodes) || (new_white_members != abhr.white_members) ||
+		(new_unocc_nodes != abhr.unocc_nodes) || (new_unocc_members != abhr.unocc_members) {
 		var lev GraphLevel
 		fmt.Println("Abstraction Hierarchy: ", str)
 		for lev = StringLevel; lev <= abhr.updtLev; lev++ {
@@ -263,7 +261,7 @@ func (abhr *AbstHier) PrintAbstHier(str string, printUnocc bool) {
 			abhr.PrintGraph(lev, printUnocc)
 		}
 		for i, m := range abhr.movs {
-			if (i >= abhr.moves_printed) {
+			if i >= abhr.moves_printed {
 				abhr.moves_printed = i
 				m.PrintMove(i)
 			}
@@ -272,7 +270,7 @@ func (abhr *AbstHier) PrintAbstHier(str string, printUnocc bool) {
 	}
 }
 
-// 
+//
 //
 func (abhr *AbstHier) initHoshiPts() {
 	// Set the hoshi points:
@@ -289,12 +287,12 @@ func (abhr *AbstHier) initHoshiPts() {
 			abhr.addHoshiPt(abhr.colSize/2, abhr.rowSize/2)
 		}
 		// Set the Side hoshi points, if there are any:
-		if ((abhr.colSize >= 15) && ((abhr.colSize & 1) == 1)) {
+		if (abhr.colSize >= 15) && ((abhr.colSize & 1) == 1) {
 			// Set the upper and lower side hoshi points:
 			abhr.addHoshiPt(abhr.colSize/2, 3)
 			abhr.addHoshiPt(abhr.colSize/2, abhr.rowSize-4)
 		}
-		if ((abhr.rowSize >= 15) && ((abhr.rowSize & 1) == 1)) {
+		if (abhr.rowSize >= 15) && ((abhr.rowSize & 1) == 1) {
 			// Set the left and right side hoshi points:
 			abhr.addHoshiPt(3, abhr.rowSize/2)
 			abhr.addHoshiPt(abhr.colSize-4, abhr.rowSize/2)
@@ -323,24 +321,24 @@ func (abhr *AbstHier) initHoshiPts() {
 	}
 }
 
-var PrintAbstHierInit bool = false	// TODO: make these parser instance variables?
-var saveAHTrace bool	// TODO: make these parser instance variables?
+var PrintAbstHierInit bool = false // TODO: make these parser instance variables?
+var saveAHTrace bool               // TODO: make these parser instance variables?
 
 // setupAbstHier either clears an existing AH, or allocates and initializes a new AH.
 // It is called by InitAbstHier
 //
 func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev GraphLevel, doPlay bool,
-		brdCHi CompStateFunc, brdCNw CompStateFunc,
-		strCHi CompStateFunc, strCNw CompStateFunc,
-		blkCHi CompStateFunc, blkCNw CompStateFunc,
-		grpCHi CompStateFunc, grpCNw CompStateFunc,
-		rgnCHi CompStateFunc, rgnCNw CompStateFunc,
-		araCHi CompStateFunc, araCNw CompStateFunc) (*AbstHier) {
+	brdCHi CompStateFunc, brdCNw CompStateFunc,
+	strCHi CompStateFunc, strCNw CompStateFunc,
+	blkCHi CompStateFunc, blkCNw CompStateFunc,
+	grpCHi CompStateFunc, grpCNw CompStateFunc,
+	rgnCHi CompStateFunc, rgnCNw CompStateFunc,
+	araCHi CompStateFunc, araCNw CompStateFunc) *AbstHier {
 	defer un(trace("setupAbstHier", 0, NilNodeLoc, 0, NilNodeLoc, nilArc, 0xFFFF))
-	var g,hiG *Graph
+	var g, hiG *Graph
 	if abhr != nil { // ClearAbstHier
 		if TraceAH {
-			fmt.Println("Clearing AbstHier", abhr);
+			fmt.Println("Clearing AbstHier", abhr)
 		}
 		abhr.Graphs[PointLevel].clearGraph(PointLevel, brdCHi, brdCNw, NodeStatus(UndefinedPointStatus))
 		abhr.Graphs[StringLevel].clearGraph(StringLevel, strCHi, strCNw, NodeStatus(UndefinedStringStatus))
@@ -352,7 +350,7 @@ func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev Gr
 		abhr.updtLev = upLev
 	} else {
 		if TraceAH {
-			fmt.Println("New AbstHier");
+			fmt.Println("New AbstHier")
 		}
 		abhr = new(AbstHier)
 		abhr.setSize(colSize, rowSize)
@@ -366,87 +364,87 @@ func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev Gr
 	}
 	if doPlay {
 		switch upLev {
-			case AreaLevel:
-				g = &abhr.Graphs[AreaLevel]
-				g.initNode = g.AddGraphNode(0)
-				// TODO: set highState, as below
-				fallthrough
-			case RegionLevel:
-				hiG = g
-				g = &abhr.Graphs[RegionLevel]
-				g.initNode = g.AddGraphNode(0)
-				// TODO: set highState, as below
-				if RegionLevel < upLev {
-					abhr.AddMember(RegionLevel, g.initNode, hiG.initNode)
+		case AreaLevel:
+			g = &abhr.Graphs[AreaLevel]
+			g.initNode = g.AddGraphNode(0)
+			// TODO: set highState, as below
+			fallthrough
+		case RegionLevel:
+			hiG = g
+			g = &abhr.Graphs[RegionLevel]
+			g.initNode = g.AddGraphNode(0)
+			// TODO: set highState, as below
+			if RegionLevel < upLev {
+				abhr.AddMember(RegionLevel, g.initNode, hiG.initNode)
+			}
+			fallthrough
+		case GroupLevel:
+			hiG = g
+			g = &abhr.Graphs[GroupLevel]
+			g.initNode = g.AddGraphNode(0)
+			// TODO: set highState, as below
+			if GroupLevel < upLev {
+				abhr.AddMember(GroupLevel, g.initNode, abhr.Graphs[RegionLevel].initNode)
+			}
+			fallthrough
+		case BlockLevel:
+			hiG = g
+			g = &abhr.Graphs[BlockLevel]
+			g.initNode = g.AddGraphNode(0)
+			// TODO: set highState, as below
+			if BlockLevel < upLev {
+				abhr.AddMember(BlockLevel, g.initNode, abhr.Graphs[GroupLevel].initNode)
+			}
+			fallthrough
+		case StringLevel:
+			hiG = g
+			g = &abhr.Graphs[StringLevel]
+			g.initNode = g.AddGraphNode(uint16(UnoccupiedString))
+			hiSt := g.CompHigh(abhr, StringLevel, g.initNode, uint16(UnoccupiedString))
+			g.Nodes[g.initNode].highState = uint16(hiSt)
+			if StringLevel < upLev {
+				abhr.AddMember(StringLevel, g.initNode, abhr.Graphs[BlockLevel].initNode)
+			}
+			fallthrough
+		case PointLevel:
+			g = &abhr.Graphs[PointLevel]
+			hiG = &abhr.Graphs[StringLevel] // make sure hiG is valid
+			// Add all the points to initNode
+			//			saveAHTrace = TraceAH // don't trace this
+			//			TraceAH = false
+			var c ColValue
+			var r RowValue
+			for r = 0; r < rowSize; r++ {
+				for c = 0; c < colSize; c++ {
+					nl := MakeNodeLoc(c, r)
+					abhr.AddMember(PointLevel, nl, hiG.initNode)
 				}
-				fallthrough
-			case GroupLevel:
-				hiG = g
-				g = &abhr.Graphs[GroupLevel]
-				g.initNode = g.AddGraphNode(0)
-				// TODO: set highState, as below
-				if GroupLevel < upLev {
-					abhr.AddMember(GroupLevel, g.initNode, abhr.Graphs[RegionLevel].initNode)
-				}
-				fallthrough
-			case BlockLevel:
-				hiG = g
-				g = &abhr.Graphs[BlockLevel]
-				g.initNode = g.AddGraphNode(0)
-				// TODO: set highState, as below
-				if BlockLevel < upLev {
-					abhr.AddMember(BlockLevel, g.initNode, abhr.Graphs[GroupLevel].initNode)
-				}
-				fallthrough
-			case StringLevel:
-				hiG = g
-				g = &abhr.Graphs[StringLevel]
-				g.initNode = g.AddGraphNode(uint16(UnoccupiedString))
-				hiSt := g.CompHigh(abhr, StringLevel, g.initNode , uint16(UnoccupiedString))
-				g.Nodes[g.initNode].highState = uint16(hiSt)
-				if StringLevel < upLev {
-					abhr.AddMember(StringLevel, g.initNode, abhr.Graphs[BlockLevel].initNode)
-				}
-				fallthrough
-			case PointLevel:
-				g = &abhr.Graphs[PointLevel]
-				hiG = &abhr.Graphs[StringLevel]	// make sure hiG is valid
-				// Add all the points to initNode
-	//			saveAHTrace = TraceAH // don't trace this
-	//			TraceAH = false
-				var c ColValue
-				var r RowValue
-				for r = 0; r < rowSize; r++ {
-					for c = 0; c < colSize; c++ {
-						nl := MakeNodeLoc(c, r)
-						abhr.AddMember(PointLevel, nl, hiG.initNode)
+			}
+			//			TraceAH = saveAHTrace	// restore
+			//			if PrintAbstHierInit == true {
+			//				abhr.PrintAbstHier("Before Changing nodes to initial states", true)
+			//				SetAHTrace(true)
+			//			} else {	// If Printing is not on, turn off tracing during init
+			//				saveAHTrace = TraceAH
+			//				TraceAH = false
+			//			}
+			// Change the nodes to their initial states
+			for r = 0; r < rowSize; r++ {
+				for c = 0; c < colSize; c++ {
+					nl := MakeNodeLoc(c, r)
+					hiSt := brdCHi(abhr, PointLevel, nl, uint16(Unocc))
+					abhr.ChangeNodeState(PointLevel, nl, NodeStatus(hiSt), true)
+					if TraceAH == true {
+						abhr.PrintAbstHier("After Changing row "+strconv.Itoa(int(r))+" col "+strconv.Itoa(int(c)), false)
 					}
 				}
-	//			TraceAH = saveAHTrace	// restore
-	//			if PrintAbstHierInit == true {
-	//				abhr.PrintAbstHier("Before Changing nodes to initial states", true)
-	//				SetAHTrace(true)
-	//			} else {	// If Printing is not on, turn off tracing during init
-	//				saveAHTrace = TraceAH
-	//				TraceAH = false
-	//			}
-				// Change the nodes to their initial states
-				for r = 0; r < rowSize; r++ {
-					for c = 0; c < colSize; c++ {
-						nl := MakeNodeLoc(c, r)
-						hiSt := brdCHi(abhr, PointLevel, nl, uint16(Unocc))
-						abhr.ChangeNodeState(PointLevel, nl, NodeStatus(hiSt), true)
-						if TraceAH == true {
-							abhr.PrintAbstHier("After Changing row "+ strconv.Itoa(int(r)) + " col " + strconv.Itoa(int(c)), false )
-						}
-					}
-				}
-	//			if PrintAbstHierInit == true {
-	//				PrintAbstHierInit = false
-	//				SetAHTrace(true)	// TODO: need this?
-	//			} else {
-	//				TraceAH = saveAHTrace	// restore to global setting
-	//			}
+			}
+			//			if PrintAbstHierInit == true {
+			//				PrintAbstHierInit = false
+			//				SetAHTrace(true)	// TODO: need this?
+			//			} else {
+			//				TraceAH = saveAHTrace	// restore to global setting
+			//			}
 		}
 	}
 
@@ -458,7 +456,7 @@ func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev Gr
 func (abhr *AbstHier) FindMoveNumber(nl NodeLoc) int16 {
 	var movNum int16 = nilMovNum
 	var i int16
-	for i = int16(len(abhr.movs))-1; (i >= 0) && (movNum == nilMovNum); i-- {
+	for i = int16(len(abhr.movs)) - 1; (i >= 0) && (movNum == nilMovNum); i-- {
 		if abhr.movs[i].moveLoc == nl {
 			movNum = i
 		}
@@ -505,10 +503,10 @@ func (abhr *AbstHier) DeleteMember(gl GraphLevel, mem NodeLoc, hiNod NodeLoc) {
 			hiG.DeleteNode(hiNod)
 		}
 	} else {
-Loop:
+	Loop:
 		for {
 			prevM := m
-			m =  g.Nodes[m].nextSame
+			m = g.Nodes[m].nextSame
 			if m == mem {
 				g.Nodes[prevM].nextSame = g.Nodes[m].nextSame
 				break Loop
@@ -550,20 +548,20 @@ func (abhr *AbstHier) AddNodeLow(gl GraphLevel, lowSt uint16) (hiNod NodeLoc, is
 
 // AddNodeHigh adds a node to a graph
 //
-func (abhr *AbstHier) AddNodeHigh(gl GraphLevel, chgNl NodeLoc, newSt uint16) ( bool) {
-	defer un(trace("AddNodeHigh", gl, chgNl, 0, NilNodeLoc, nilArc,  NodeStatus(newSt)))
+func (abhr *AbstHier) AddNodeHigh(gl GraphLevel, chgNl NodeLoc, newSt uint16) bool {
+	defer un(trace("AddNodeHigh", gl, chgNl, 0, NilNodeLoc, nilArc, NodeStatus(newSt)))
 	var sameNod NodeLoc = NilNodeLoc
 	var hiNod NodeLoc
 	var isNew bool
 	abhr.EachAdjNode(gl, chgNl,
-		func (adjNl NodeLoc) { // FindSamePtType
+		func(adjNl NodeLoc) { // FindSamePtType
 			adjPt := &abhr.Graphs[gl].Nodes[adjNl]
-			if adjPt.GetNodeHighState() == newSt { 
-				sameNod = adjNl 
+			if adjPt.GetNodeHighState() == newSt {
+				sameNod = adjNl
 			}
 		})
 	if sameNod == NilNodeLoc {
-		if abhr.updtLev <= (gl+1) {
+		if abhr.updtLev <= (gl + 1) {
 			hiG := &abhr.Graphs[gl+1]
 			hiNod = hiG.AddGraphNode(uint16(newSt))
 			hiSt := hiG.compNew(abhr, gl+1, hiNod, newSt)
@@ -589,7 +587,7 @@ func (abhr *AbstHier) CheckMerge(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) {
 		defer un(trace(" MergeNodes", gl, nod, gl+1, hiNod, nilArc, 0xFFFF))
 		var mrgStk *SearchStack
 		saveSt := g.Nodes[nod].highState
-		mrgStk = abhr.BreadthFirstSearch(gl, nod, 
+		mrgStk = abhr.BreadthFirstSearch(gl, nod,
 			func(inNL NodeLoc) (ret bool) { // Find target, ==> false
 				return false
 			})
@@ -597,7 +595,7 @@ func (abhr *AbstHier) CheckMerge(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) {
 			mrgStk.UnMarkNodes()
 		}
 		// set the nodes to undefStatus
-		for _,p := range mrgStk.nods {
+		for _, p := range mrgStk.nods {
 			if TraceAH {
 				PrintNodeLoc(gl, p, " Setting to undefStatus")
 				fmt.Println()
@@ -605,7 +603,7 @@ func (abhr *AbstHier) CheckMerge(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) {
 			g.Nodes[p].highState = uint16(g.undefStatus)
 		}
 		// change them back to saveSt, without checking for Merge/Split
-		for _,p := range mrgStk.nods {
+		for _, p := range mrgStk.nods {
 			if TraceAH {
 				PrintNodeLoc(gl, p, " Calling to change to saveState")
 				fmt.Print(" ")
@@ -649,7 +647,7 @@ func (abhr *AbstHier) CheckMerge(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) {
 // If so, perform the split.
 // Returns the original component, in case of multiple splits.
 //
-func (abhr *AbstHier) CheckSplit (gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret NodeLoc) {
+func (abhr *AbstHier) CheckSplit(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret NodeLoc) {
 	defer un(trace("CheckSplit", gl, n1, gl, n2, nilArc, 0xFFFF))
 	if TraceAH {
 		abhr.PrintAbstHier("Entering CheckSplit", true)
@@ -661,9 +659,9 @@ func (abhr *AbstHier) CheckSplit (gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret No
 	pathInPart := func(low1 NodeLoc, low2 NodeLoc) (found bool) {
 		defer un(trace("pathInPart", gl, low1, gl, low2, nilArc, 0xFFFF))
 		spltStk = abhr.BreadthFirstSearch(gl, low2,
-				func(inNL NodeLoc) (bool) { // inPart
-					return (inNL == targN)
-				})
+			func(inNL NodeLoc) bool { // inPart
+				return (inNL == targN)
+			})
 		if TraceAH {
 			fmt.Println(" After BreadthFirstSearch, found = ", spltStk.found)
 		}
@@ -689,7 +687,7 @@ func (abhr *AbstHier) CheckSplit (gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret No
 		for _, nn := range spltStk.nods {
 			if TraceAH {
 				PrintNodeLoc(gl, nn, " computing the high value for node: ")
-				fmt.Println("    nn = ", nn, " saveSt = ", saveSt);
+				fmt.Println("    nn = ", nn, " saveSt = ", saveSt)
 			}
 			if TraceAH {
 				PrintNodeLoc(gl, nn, " Setting back to saveSt: ")
@@ -697,12 +695,12 @@ func (abhr *AbstHier) CheckSplit (gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret No
 			}
 			g.Nodes[nn].lowState = saveSt
 			g.Nodes[nn].highState = saveSt
-			if abhr.updtLev <= (gl+1) {
+			if abhr.updtLev <= (gl + 1) {
 				// TODO: verify this?
 				abhr.Graphs[gl+1].Nodes[g.Nodes[nn].memberOf].lowState = saveSt
 			} else {
 				// TODO: need to ChangeNodeState for higher levels
-				abhr.ChangeNodeState(gl+1, g.Nodes[nn].memberOf, NodeStatus(saveSt), false)	// TODO: or true?
+				abhr.ChangeNodeState(gl+1, g.Nodes[nn].memberOf, NodeStatus(saveSt), false) // TODO: or true?
 			}
 		}
 		if TraceAH {
@@ -713,7 +711,7 @@ func (abhr *AbstHier) CheckSplit (gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret No
 		//	2. Each coloring function maps "Undefined" to "Undefined".
 		//	3. Coloring function is prepared to see "Undefined" in the Neighborhood.
 		//	4. Rest of program does not expect (or use!) the "Undefined" state.
-		
+
 		// save the high node:
 		hiNod := g.Nodes[spltStk.nods[0]].memberOf
 		loSt := saveSt
@@ -733,7 +731,7 @@ func (abhr *AbstHier) CheckSplit (gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret No
 	if high1 == g.Nodes[n2].memberOf {
 		if !pathInPart(n1, n2) {
 			spltStk.UnMarkNodes()
-			pSize := 0;	// PartSize
+			pSize := 0 // PartSize
 			nod := abhr.Graphs[gl+1].Nodes[high1].firstMem
 			for nod != NilNodeLoc {
 				pSize += 1
@@ -776,7 +774,7 @@ func (abhr *AbstHier) DeleteArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLo
 		}
 		hiG.arcs[highArc].imageCount -= 1
 		if hiG.arcs[highArc].imageCount <= 0 {
-			if abhr.updtLev <= hiG.gLevel  {
+			if abhr.updtLev <= hiG.gLevel {
 				hiG.DeleteEdge(highChg, highAdj)
 			} else { // deleteArcLow
 				// deleteArcLow(gl+1, highChg, highAdj)
@@ -799,10 +797,10 @@ func (abhr *AbstHier) ChangeNodeState(gl GraphLevel, chgNod NodeLoc, newState No
 	// save the original State
 	origState := g.Nodes[chgNod].GetNodeLowState()
 	// delete the images of the edges
-	abhr.EachAdjNode(gl, chgNod, 
-		func (adjNod NodeLoc) {
+	abhr.EachAdjNode(gl, chgNod,
+		func(adjNod NodeLoc) {
 			abhr.DeleteArcHigh(gl, chgNod, adjNod)
-		}) 
+		})
 	// delete the point from the string level graph
 	// TODO: xxxx should call DeleteNodeHigh, not DeleteMember (for higher update levels)
 	abhr.DeleteMember(gl, chgNod, g.Nodes[chgNod].memberOf)
@@ -818,18 +816,18 @@ func (abhr *AbstHier) ChangeNodeState(gl GraphLevel, chgNod NodeLoc, newState No
 		})
 	if doMrgSplt {
 		// do the check for merges and splits
-		// TODO: why are they pushed on a stack? 
+		// TODO: why are they pushed on a stack?
 		// (part of shard code?) (to reverse the order?) (or ???)
 		var changeStack *SearchStack = new(SearchStack)
 		changeStack.g = g
 		var cs_split NodeLoc = NilNodeLoc
 		abhr.EachAdjNode(gl, chgNod,
-			func (adjNod NodeLoc) { // pushPoint
+			func(adjNod NodeLoc) { // pushPoint
 				changeStack = changeStack.PushAndMark(adjNod)
 			})
 		changeStack.UnMarkNodes()
 		stkSz := len(changeStack.nods)
-		for	stkSz > 0 { // chk_cs
+		for stkSz > 0 { // chk_cs
 			elem := changeStack.nods[stkSz-1]
 			loSt := g.Nodes[elem].GetNodeLowState()
 			if loSt == origState {
@@ -847,14 +845,14 @@ func (abhr *AbstHier) ChangeNodeState(gl GraphLevel, chgNod NodeLoc, newState No
 					}
 					cs_split = abhr.CheckSplit(gl, cs_split, elem)
 				}
-			} else if loSt == uint16(newState) { 
+			} else if loSt == uint16(newState) {
 				if TraceAH {
 					PrintNodeLoc(changeStack.g.gLevel, elem, " chk_cs, testing for CheckMerge: ")
 					PrintNodeLoc(changeStack.g.gLevel, chgNod, ", ")
 					fmt.Println()
 				}
 				if g.Nodes[elem].memberOf != g.Nodes[chgNod].memberOf {
-					abhr.CheckMerge (gl, elem, chgNod) 
+					abhr.CheckMerge(gl, elem, chgNod)
 				}
 			}
 			stkSz -= 1
@@ -893,7 +891,7 @@ func (abhr *AbstHier) AddArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) 
 
 // AddArcLow is called to add an arc into an abstraction hierarchy
 //
-func (abhr *AbstHier) AddArcLow(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) ( ArcIdx) {
+func (abhr *AbstHier) AddArcLow(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) ArcIdx {
 	defer un(trace("AddArcLow", gl, chgNod, gl, adjNod, nilArc, 0xFFFF))
 	newA := nilArc
 	g := &abhr.Graphs[gl]
@@ -923,7 +921,7 @@ func printSizeAlign(s string, sz uintptr, al uintptr) {
 }
 
 func PrintAhStructSizes() {
-// board.go
+	// board.go
 	var d Direction
 	var pt PointType
 	var cv ColValue
@@ -931,7 +929,7 @@ func PrintAhStructSizes() {
 	var nl NodeLoc
 	var nll NodeLocList
 	var m MoveRecord
-//var bp BoardPoint
+	//var bp BoardPoint
 	var b Board
 	var ss SearchStack
 	var gnlf GraphNodeLocFunc
@@ -943,15 +941,15 @@ func PrintAhStructSizes() {
 	printSizeAlign("NodeLoc", unsafe.Sizeof(nl), unsafe.Alignof(nl))
 	printSizeAlign("NodeLocList", unsafe.Sizeof(nll), unsafe.Alignof(nll))
 	printSizeAlign("MoveRecord", unsafe.Sizeof(m), unsafe.Alignof(m))
-//	printSizeAlign("BoardPoint", unsafe.Sizeof(bp), unsafe.Alignof(bp))
+	//	printSizeAlign("BoardPoint", unsafe.Sizeof(bp), unsafe.Alignof(bp))
 	printSizeAlign("Board", unsafe.Sizeof(b), unsafe.Alignof(b))
 	printSizeAlign("SearchStack", unsafe.Sizeof(ss), unsafe.Alignof(ss))
 	printSizeAlign("GraphNodeLocFunc", unsafe.Sizeof(gnlf), unsafe.Alignof(gnlf))
 	printSizeAlign("NodeLocFuncBool", unsafe.Sizeof(nlfb), unsafe.Alignof(nlfb))
-// trans.go
+	// trans.go
 	var bt BoardTrans
 	printSizeAlign("BoardTrans", unsafe.Sizeof(bt), unsafe.Alignof(bt))
-// graph.go
+	// graph.go
 	var ai ArcIdx
 	var gm GraphMark
 	var gn GraphNode
@@ -970,17 +968,17 @@ func PrintAhStructSizes() {
 	printSizeAlign("Graph", unsafe.Sizeof(g), unsafe.Alignof(g))
 	printSizeAlign("NodeLocFunc", unsafe.Sizeof(glnf), unsafe.Alignof(glnf))
 	printSizeAlign("ArcFunc", unsafe.Sizeof(af), unsafe.Alignof(af))
-// comp.go
+	// comp.go
 	var ps PointStatus
 	printSizeAlign("PointStatus", unsafe.Sizeof(ps), unsafe.Alignof(ps))
-// update.go
+	// update.go
 	var gl GraphLevel
 	var ah AbstHier
 	var ns NodeStatus
 	printSizeAlign("GraphLevel", unsafe.Sizeof(gl), unsafe.Alignof(gl))
 	printSizeAlign("AbstHier", unsafe.Sizeof(ah), unsafe.Alignof(ah))
 	printSizeAlign("NodeStatus", unsafe.Sizeof(ns), unsafe.Alignof(ns))
-// gostrings.go
+	// gostrings.go
 	var sst StringStatus
 	printSizeAlign("StringStatus", unsafe.Sizeof(sst), unsafe.Alignof(sst))
 }

@@ -329,7 +329,7 @@ type Board struct {
 	// Who made the first move?
 	mov1    PointStatus
 	mov1Set bool
-	// the number of moves, NOT the number of entries in movs[], 
+	// the number of moves, NOT the number of entries in movs[],
 	// which includes handicap and setup stones.
 	numMoves        uint16
 	numbBlackStones uint16
@@ -355,9 +355,9 @@ func (brd *Board) GetNMoves() int {
 func (abhr *AbstHier) setSize(csz ColValue, rsz RowValue) {
 	abhr.colSize = csz
 	abhr.rowSize = rsz
-    for t := T_FIRST; t <= T_LAST; t += 1 {
-        abhr.brdZCode[t] = 0   // empty board and BlackToPlayZKey == 0 
-    }
+	for t := T_FIRST; t <= T_LAST; t += 1 {
+		abhr.brdZCode[t] = 0 // empty board and BlackToPlayZKey == 0
+	}
 	abhr.zHashTable = make(map[ZobristCode]*MoveHashList, 100)
 	abhr.KoPt = NilNodeLoc
 	abhr.Graphs[PointLevel].initBoardPoints(csz, rsz)
@@ -376,7 +376,7 @@ func (abhr *AbstHier) addHoshiPt(c ColValue, r RowValue) {
 //
 func (brd *Board) OnBoard(nl NodeLoc) (ret bool) {
 	c, r := GetColRow(nl)
-        //    fmt.Printf(" c = %d, brd.colSize = %d. r = %d, brd.rowSize = %d\n", c, brd.colSize, r, brd.rowSize)
+	//    fmt.Printf(" c = %d, brd.colSize = %d. r = %d, brd.rowSize = %d\n", c, brd.colSize, r, brd.rowSize)
 	if (c < brd.colSize) && (r < brd.rowSize) {
 		ret = true
 	}
@@ -403,50 +403,50 @@ func (abhr *AbstHier) AddMove(nl NodeLoc, color PointStatus, n uint16, ko NodeLo
 	abhr.movs[ln].nextCapture = nilMovNum
 	abhr.movs[ln].firstCap = nilMovNum
 	abhr.movs[ln].koPoint = ko
-    if n > 0 {
-        // toggle who to play, always
-        for t := T_FIRST; t <= T_LAST; t +=1 {
-            abhr.brdZCode[t] = abhr.brdZCode[t] ^ WhiteToPlayZKey
-        }
-    }
+	if n > 0 {
+		// toggle who to play, always
+		for t := T_FIRST; t <= T_LAST; t += 1 {
+			abhr.brdZCode[t] = abhr.brdZCode[t] ^ WhiteToPlayZKey
+		}
+	}
 	c, r := GetColRow(nl)
 	// record the stone, if one
 	if nl != PassNodeLoc {
 		if color == Black {
-            for t := T_FIRST; t <= T_LAST; t +=1 {
-                t_nl := abhr.TransNodeLoc(t, c, r)
-                t_c, t_r := GetColRow(t_nl)
-                abhr.brdZCode[t] = abhr.brdZCode[t] ^ BlackZKey[t_c][t_r]
-            }
+			for t := T_FIRST; t <= T_LAST; t += 1 {
+				t_nl := abhr.TransNodeLoc(t, c, r)
+				t_c, t_r := GetColRow(t_nl)
+				abhr.brdZCode[t] = abhr.brdZCode[t] ^ BlackZKey[t_c][t_r]
+			}
 			abhr.numbBlackStones += 1
 		} else {
-            for t := T_FIRST; t <= T_LAST; t +=1 {
-                t_nl := abhr.TransNodeLoc(t, c, r)
-                t_c, t_r := GetColRow(t_nl)
-                abhr.brdZCode[t] = abhr.brdZCode[t] ^ WhiteZKey[t_c][t_r]
-            }
+			for t := T_FIRST; t <= T_LAST; t += 1 {
+				t_nl := abhr.TransNodeLoc(t, c, r)
+				t_c, t_r := GetColRow(t_nl)
+				abhr.brdZCode[t] = abhr.brdZCode[t] ^ WhiteZKey[t_c][t_r]
+			}
 			abhr.numbWhiteStones += 1
 		}
 	}
 	// remove the old koPoint, if there was one
 	if ln > 0 {
 		if abhr.movs[ln-1].koPoint != NilNodeLoc {
-            c, r = GetColRow(abhr.movs[ln-1].koPoint)
-            for t := T_FIRST; t <= T_LAST; t += 1 {
-                t_nl := abhr.TransNodeLoc(t, c, r)
-                t_c, t_r := GetColRow(t_nl)
-                abhr.brdZCode[t] = abhr.brdZCode[t] ^ KoZKey[t_c][t_r]
-            }
+			c, r = GetColRow(abhr.movs[ln-1].koPoint)
+			for t := T_FIRST; t <= T_LAST; t += 1 {
+				t_nl := abhr.TransNodeLoc(t, c, r)
+				t_c, t_r := GetColRow(t_nl)
+				abhr.brdZCode[t] = abhr.brdZCode[t] ^ KoZKey[t_c][t_r]
+			}
 		}
 	}
 	// add the new koPoint, if there is one
 	if ko != NilNodeLoc {
 		c, r = GetColRow(ko)
-        for t := T_FIRST; t <= T_LAST; t += 1 {
-            t_nl := abhr.TransNodeLoc(t, c, r)
-            t_c, t_r := GetColRow(t_nl)
-            abhr.brdZCode[t] = abhr.brdZCode[t] ^ KoZKey[t_c][t_r]
-        }
+		for t := T_FIRST; t <= T_LAST; t += 1 {
+			t_nl := abhr.TransNodeLoc(t, c, r)
+			t_c, t_r := GetColRow(t_nl)
+			abhr.brdZCode[t] = abhr.brdZCode[t] ^ KoZKey[t_c][t_r]
+		}
 	}
 	return ln
 }
@@ -574,7 +574,7 @@ func (abhr *AbstHier) DoBoardMove(nl NodeLoc, color PointStatus, doPlay bool) (m
 			}
 		}
 		if nl == abhr.KoPt { // check for illegal Ko recapture
-			err.Add(NoPos, "illegal retake of Ko at move " + strconv.Itoa(int(abhr.numMoves+1)))
+			err.Add(NoPos, "illegal retake of Ko at move "+strconv.Itoa(int(abhr.numMoves+1)))
 		}
 		// Count Friendly, Enemy, Vacant, and Captures among Adjacent
 		abhr.EachAdjNode(PointLevel, nl, // ChkBlack/WhiteAdjs
@@ -667,18 +667,18 @@ func (abhr *AbstHier) DoBoardMove(nl NodeLoc, color PointStatus, doPlay bool) (m
 					capNL := abhr.movs[capMovNum].moveLoc
 					c, r := GetColRow(capNL)
 					if capColor == Black {
-                        for t := T_FIRST; t <= T_LAST; t +=1 {
-                            t_nl := abhr.TransNodeLoc(t, c, r)
-                            t_c, t_r := GetColRow(t_nl)
-                            abhr.brdZCode[t] = abhr.brdZCode[t] ^ BlackZKey[t_c][t_r]
-                        }
+						for t := T_FIRST; t <= T_LAST; t += 1 {
+							t_nl := abhr.TransNodeLoc(t, c, r)
+							t_c, t_r := GetColRow(t_nl)
+							abhr.brdZCode[t] = abhr.brdZCode[t] ^ BlackZKey[t_c][t_r]
+						}
 						abhr.numbBlackStones -= 1
 					} else {
-                        for t := T_FIRST; t <= T_LAST; t +=1 {
-                            t_nl := abhr.TransNodeLoc(t, c, r)
-                            t_c, t_r := GetColRow(t_nl)
-                            abhr.brdZCode[t] = abhr.brdZCode[t] ^ WhiteZKey[t_c][t_r]
-                        }
+						for t := T_FIRST; t <= T_LAST; t += 1 {
+							t_nl := abhr.TransNodeLoc(t, c, r)
+							t_c, t_r := GetColRow(t_nl)
+							abhr.brdZCode[t] = abhr.brdZCode[t] ^ WhiteZKey[t_c][t_r]
+						}
 						abhr.numbWhiteStones -= 1
 					}
 					abhr.Graphs[PointLevel].Nodes[capNL].lowState = uint16(Unocc)
@@ -716,7 +716,7 @@ func (abhr *AbstHier) DoBoardMove(nl NodeLoc, color PointStatus, doPlay bool) (m
 		if ok {
 			// check if this is a false match:
 			if (v.bCount == uint8(abhr.numbBlackStones)) && (v.wCount == uint8(abhr.numbWhiteStones)) {
-				err.Add(NoPos, "repeat position, move " + strconv.Itoa(moveNum) + " repeats position after " + strconv.Itoa(int(v.moveIdx)))
+				err.Add(NoPos, "repeat position, move "+strconv.Itoa(moveNum)+" repeats position after "+strconv.Itoa(int(v.moveIdx)))
 			} // else {
 			// TODO: remove after checking
 			//	err.Add(NoPos, "false repeat position")
@@ -736,11 +736,11 @@ func (abhr *AbstHier) DoBoardMove(nl NodeLoc, color PointStatus, doPlay bool) (m
 			v.nextMoveHash = nil
 			v.bCount = uint8(abhr.numbBlackStones)
 			v.wCount = uint8(abhr.numbWhiteStones)
-//			abhr.zHashTable[abhr.brdZCode] = v, true
-            for t := T_FIRST; t <= T_LAST; t +=1 {
-                // TODO: how to record transformation?
-                abhr.zHashTable[abhr.brdZCode[t]] = v
-            }
+			//			abhr.zHashTable[abhr.brdZCode] = v, true
+			for t := T_FIRST; t <= T_LAST; t += 1 {
+				// TODO: how to record transformation?
+				abhr.zHashTable[abhr.brdZCode[t]] = v
+			}
 		}
 	}
 	return moveNum, err

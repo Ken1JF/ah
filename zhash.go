@@ -17,22 +17,23 @@
 package ah
 
 import (
-	"math/rand"
 	"fmt"
+	"math/rand"
 )
 
 type ZobristCode uint32
 
 var ZSeed int64
 
-var BlackZKey[MaxBoardSize][MaxBoardSize] ZobristCode
-var WhiteZKey[MaxBoardSize][MaxBoardSize] ZobristCode
-var KoZKey[MaxBoardSize][MaxBoardSize] ZobristCode
+var BlackZKey [MaxBoardSize][MaxBoardSize]ZobristCode
+var WhiteZKey [MaxBoardSize][MaxBoardSize]ZobristCode
+var KoZKey [MaxBoardSize][MaxBoardSize]ZobristCode
+
 // var BlackToPlayZKey ZobristCode don't need, redundant
-var WhiteToPlayZKey ZobristCode 
+var WhiteToPlayZKey ZobristCode
 
 var keyCount int64
-var checkKeys map[ZobristCode] int64
+var checkKeys map[ZobristCode]int64
 
 const checkKeysNeeded int = 1085
 
@@ -56,46 +57,46 @@ func newZobristKey() ZobristCode {
 // Initialize the Zobrist Keys
 //
 func init() {
-	checkKeys = make( map [ZobristCode] int64, checkKeysNeeded)
-	ZSeed = (2*3*5*7*11)-1
+	checkKeys = make(map[ZobristCode]int64, checkKeysNeeded)
+	ZSeed = (2 * 3 * 5 * 7 * 11) - 1
 	rand.Seed(ZSeed)
-	var i,j uint8
-	for i = 0; i < MaxBoardSize; i+=1 {
-		for j = 0; j < MaxBoardSize; j+=1 {
+	var i, j uint8
+	for i = 0; i < MaxBoardSize; i += 1 {
+		for j = 0; j < MaxBoardSize; j += 1 {
 			BlackZKey[i][j] = newZobristKey()
 			WhiteZKey[i][j] = newZobristKey()
 			KoZKey[i][j] = newZobristKey()
 		}
 	}
-//	BlackToPlayZKey = newZobristKey()
+	//	BlackToPlayZKey = newZobristKey()
 	WhiteToPlayZKey = newZobristKey()
-	fmt.Println("keyCount =", keyCount);
+	fmt.Println("keyCount =", keyCount)
 }
 
 func PrintZKeys() {
 	fmt.Println("ZSeed = ", ZSeed)
-	var i,j uint8
+	var i, j uint8
 	fmt.Println("BlackZKey = ")
-	for i = 0; i < MaxBoardSize; i+=1 {
-		for j = 0; j < MaxBoardSize; j+=1 {
+	for i = 0; i < MaxBoardSize; i += 1 {
+		for j = 0; j < MaxBoardSize; j += 1 {
 			fmt.Print(BlackZKey[i][j], ",")
 		}
 		fmt.Println()
 	}
 	fmt.Println("WhiteZKey = ")
-	for i = 0; i < MaxBoardSize; i+=1 {
-		for j = 0; j < MaxBoardSize; j+=1 {
+	for i = 0; i < MaxBoardSize; i += 1 {
+		for j = 0; j < MaxBoardSize; j += 1 {
 			fmt.Print(WhiteZKey[i][j], ",")
 		}
 		fmt.Println()
 	}
 	fmt.Println("KoZKey = ")
-	for i = 0; i < MaxBoardSize; i+=1 {
-		for j = 0; j < MaxBoardSize; j+=1 {
+	for i = 0; i < MaxBoardSize; i += 1 {
+		for j = 0; j < MaxBoardSize; j += 1 {
 			fmt.Print(KoZKey[i][j], ",")
 		}
 		fmt.Println()
 	}
-//	fmt.Println("BlackToPlayZKey = ", BlackToPlayZKey)
+	//	fmt.Println("BlackToPlayZKey = ", BlackToPlayZKey)
 	fmt.Println("WhiteToPlayZKey = ", WhiteToPlayZKey)
 }

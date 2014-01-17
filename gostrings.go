@@ -14,9 +14,8 @@ package ah
 type StringStatus uint16
 
 const (
-	UndefinedStringStatus	StringStatus = iota
+	UndefinedStringStatus StringStatus = iota
 	BlackString
 	WhiteString
 	UnoccupiedString
 )
-

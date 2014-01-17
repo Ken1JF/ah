@@ -55,12 +55,12 @@ func computeBlockHighState(abhr *AbstHier, gl GraphLevel, n NodeLoc, newLoSt uin
 func computeNewStringState(abhr *AbstHier, gl GraphLevel, n NodeLoc, newLoSt uint16) (ret uint16) {
 	nwSt := StringStatus(newLoSt)
 	switch nwSt {
-		case BlackString:
-			ret = uint16(BlackString)
-		case WhiteString:
-			ret = uint16(WhiteString)
-		default:
-			ret = uint16(UnoccupiedString)
+	case BlackString:
+		ret = uint16(BlackString)
+	case WhiteString:
+		ret = uint16(WhiteString)
+	default:
+		ret = uint16(UnoccupiedString)
 	}
 	return ret
 }
@@ -68,12 +68,12 @@ func computeNewStringState(abhr *AbstHier, gl GraphLevel, n NodeLoc, newLoSt uin
 func computeStringHighState(abhr *AbstHier, gl GraphLevel, n NodeLoc, newLoSt uint16) (ret uint16) {
 	nwSt := StringStatus(newLoSt)
 	switch nwSt {
-		case BlackString:
-			ret = uint16(BlackString)
-		case WhiteString:
-			ret = uint16(WhiteString)
-		default:
-			ret = uint16(UnoccupiedString)
+	case BlackString:
+		ret = uint16(BlackString)
+	case WhiteString:
+		ret = uint16(WhiteString)
+	default:
+		ret = uint16(UnoccupiedString)
 	}
 	return ret
 }
@@ -90,49 +90,49 @@ type PointStatus uint16
 const (
 	// Undefined, used by ChangeNodeState, as a temporary value
 	UndefinedPointStatus PointStatus = iota
-	
+
 	// Occupied, stone color
 	Black
 	White
-	
+
 	// Move types, for AB, AW, and AE properties:
 	// Note: the "no-op" moves: AB_B, AW_W, and AE_U are not supported.
-	
-	AB_U        // Add Black, was Unoccupied
-	AB_W        // Add Black, was White
-	AE_B        // Add Empty, was Black
-	AE_W        // Add Empty, was White
-	AW_B        // Add White, was Black
-	AW_U        // Add White, was Unoccupied
-		
+
+	AB_U // Add Black, was Unoccupied
+	AB_W // Add Black, was White
+	AE_B // Add Empty, was Black
+	AE_W // Add Empty, was White
+	AW_B // Add White, was Black
+	AW_U // Add White, was Unoccupied
+
 	// Unoccupied if PointStatus >= Unocc
 
-	Unocc	// generic unoccupied, unknown adj. status
-	
-	B0W0	// no adj. stones, known to be a non-liberty point
+	Unocc // generic unoccupied, unknown adj. status
+
+	B0W0 // no adj. stones, known to be a non-liberty point
 
 	// Liberty if PointStatus > B0W0
 
 	// Single Adjacent Stone:
 	W1
 	B1
-	
+
 	// Two Adjacent Stones:
-	W2 
+	W2
 	B1W1
-	W1B1	// non-canonical value
+	W1B1 // non-canonical value
 	B2
-	
+
 	// Three Adjacent Stones:
-	B3		// 3 adj. stones
+	B3 // 3 adj. stones
 	B2W1
 	B1W2
 	W3
-	WBB 	// non-canonical value
-	WBW 	// non-canonical value
-	BWB		// non-canonical value
+	WBB // non-canonical value
+	WBW // non-canonical value
+	BWB // non-canonical value
 	W2B1
-	
+
 	// Four Adjacent Stones:
 	B4
 	B3W1
@@ -140,211 +140,210 @@ const (
 	BBWW
 	B1W3
 	W4
-	
-	LastPointStatus	// for checking values
+
+	LastPointStatus // for checking values
 )
 
 // no computeNewPointState, no new points
 
-func computePointHighState(abhr *AbstHier, gl GraphLevel, nl NodeLoc, newLoSt uint16) (uint16) {
+func computePointHighState(abhr *AbstHier, gl GraphLevel, nl NodeLoc, newLoSt uint16) uint16 {
 	var ret PointStatus
 	switch PointStatus(newLoSt) {
-		case Black:
-			ret = Black
-		case White:
-			ret = White
-		default: // unoccupied
-			ret = Unocc
-			g := &abhr.Graphs[PointLevel]
-			abhr.EachAdjNode(PointLevel, nl,
-				func(adjNl NodeLoc) {
-					adjN := &g.Nodes[adjNl]
-					switch ret {
-						// No adjacent stones:
-						case Unocc, B0W0:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B1
-								case White:
-									ret = W1
-								default:
-									ret = B0W0
-							}
-						// One adjacent stone:
-						case B1:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B2
-								case White:
-									ret = B1W1
-								default:
-									ret = B1
-							}
-						case W1:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = W1B1
-								case White:
-									ret = W2
-								default:
-									ret = W1
-							}
-						// Two adjacent stones:
-						case B2:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B3
-								case White:
-									ret = B2W1
-								default:
-									ret = B2
-							}
-						case B1W1:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = BWB
-								case White:
-									ret = B1W2
-								default:
-									ret = B1W1
-							}
-						case W1B1:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = WBB
-								case White:
-									ret = WBW
-								default:
-									ret = W1B1
-							}
-						case W2:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = W2B1
-								case White:
-									ret = W3
-								default:
-									ret = W2
-							}
-						// Three adjacent stones:
-						case B3:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B4
-								case White:
-									ret = B3W1
-								default:
-									ret = B3
-							}
-						case B2W1:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B3W1
-								case White:
-									ret = BBWW
-								default:
-									ret = B2W1
-							}
-						case BWB:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B3W1
-								case White:
-									ret = BWBW
-								default:
-									ret = BWB
-							}
-						case WBB:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B3W1
-								case White:
-									ret = BBWW
-								default:
-									ret = WBB
-							}
-						case B1W2:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = BBWW
-								case White:
-									ret = B1W3
-								default:
-									ret = B1W2
-							}
-						case W2B1:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = BBWW
-								case White:
-									ret = B1W3
-								default:
-									ret = W2B1
-							}
-						case WBW:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = BWBW
-								case White:
-									ret = B1W3
-								default:
-									ret = B1W2
-							}
-						case W3:
-							switch PointStatus(adjN.GetNodeLowState()) {
-								case Black:
-									ret = B1W3
-								case White:
-									ret = W4
-								default:
-									ret = W3
-							}
-						// Four adjacent stones: (all done...)
-					}
-				})
-			if ret == B0W0 { // unoccupied, non-Liberty
-				// Make the B0W0 unique up to PointType
-				// TODO: look at adjacencies, and allow HoshiPt and AdjHoshi
-				// to "break up" the unoccupied board regions.
-				// TODO: recognize the 1-2, 2-3, 3-4, etc. point types (as part
-				// of static board intiialization.)
-				typ := abhr.Graphs[PointLevel].Nodes[nl].GetPointType()
-				ret = (PointStatus(typ) << UnoccPtTypeShift) | ret
-			} else { // Liberty
-				// adjust the non-canonical values
+	case Black:
+		ret = Black
+	case White:
+		ret = White
+	default: // unoccupied
+		ret = Unocc
+		g := &abhr.Graphs[PointLevel]
+		abhr.EachAdjNode(PointLevel, nl,
+			func(adjNl NodeLoc) {
+				adjN := &g.Nodes[adjNl]
 				switch ret {
-					case BWB:
-						ret = B2W1
-					case W1B1:
+				// No adjacent stones:
+				case Unocc, B0W0:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B1
+					case White:
+						ret = W1
+					default:
+						ret = B0W0
+					}
+				// One adjacent stone:
+				case B1:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B2
+					case White:
 						ret = B1W1
-					case W2B1:
-						ret = B1W2
-					case WBB:
+					default:
+						ret = B1
+					}
+				case W1:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = W1B1
+					case White:
+						ret = W2
+					default:
+						ret = W1
+					}
+				// Two adjacent stones:
+				case B2:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B3
+					case White:
 						ret = B2W1
-					case WBW:
+					default:
+						ret = B2
+					}
+				case B1W1:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = BWB
+					case White:
 						ret = B1W2
 					default:
+						ret = B1W1
+					}
+				case W1B1:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = WBB
+					case White:
+						ret = WBW
+					default:
+						ret = W1B1
+					}
+				case W2:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = W2B1
+					case White:
+						ret = W3
+					default:
+						ret = W2
+					}
+				// Three adjacent stones:
+				case B3:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B4
+					case White:
+						ret = B3W1
+					default:
+						ret = B3
+					}
+				case B2W1:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B3W1
+					case White:
+						ret = BBWW
+					default:
+						ret = B2W1
+					}
+				case BWB:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B3W1
+					case White:
+						ret = BWBW
+					default:
+						ret = BWB
+					}
+				case WBB:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B3W1
+					case White:
+						ret = BBWW
+					default:
+						ret = WBB
+					}
+				case B1W2:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = BBWW
+					case White:
+						ret = B1W3
+					default:
+						ret = B1W2
+					}
+				case W2B1:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = BBWW
+					case White:
+						ret = B1W3
+					default:
+						ret = W2B1
+					}
+				case WBW:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = BWBW
+					case White:
+						ret = B1W3
+					default:
+						ret = B1W2
+					}
+				case W3:
+					switch PointStatus(adjN.GetNodeLowState()) {
+					case Black:
+						ret = B1W3
+					case White:
+						ret = W4
+					default:
+						ret = W3
+					}
+					// Four adjacent stones: (all done...)
 				}
-				// make the Liberty return value unique:
-				ret = PointStatus((int(nl) << UnoccPtTypeShift) | int(ret))
+			})
+		if ret == B0W0 { // unoccupied, non-Liberty
+			// Make the B0W0 unique up to PointType
+			// TODO: look at adjacencies, and allow HoshiPt and AdjHoshi
+			// to "break up" the unoccupied board regions.
+			// TODO: recognize the 1-2, 2-3, 3-4, etc. point types (as part
+			// of static board intiialization.)
+			typ := abhr.Graphs[PointLevel].Nodes[nl].GetPointType()
+			ret = (PointStatus(typ) << UnoccPtTypeShift) | ret
+		} else { // Liberty
+			// adjust the non-canonical values
+			switch ret {
+			case BWB:
+				ret = B2W1
+			case W1B1:
+				ret = B1W1
+			case W2B1:
+				ret = B1W2
+			case WBB:
+				ret = B2W1
+			case WBW:
+				ret = B1W2
+			default:
 			}
+			// make the Liberty return value unique:
+			ret = PointStatus((int(nl) << UnoccPtTypeShift) | int(ret))
+		}
 	}
 	return uint16(ret)
 }
 
 const (
-	RawStatusMask		PointStatus = 0x1F // last five bits are raw value
-	LibertyColShift		uint16 = 10
-	UnoccPtTypeShift	uint16 =  6
-	LibertyRowShift		uint16 = 5
+	RawStatusMask    PointStatus = 0x1F // last five bits are raw value
+	LibertyColShift  uint16      = 10
+	UnoccPtTypeShift uint16      = 6
+	LibertyRowShift  uint16      = 5
 )
 
 // GetRawPointStatus removes Col and Row bits
 //
-func GetRawPointStatus(pst PointStatus) (PointStatus) {
+func GetRawPointStatus(pst PointStatus) PointStatus {
 	return (pst & RawStatusMask)
 }
-
 
 // IsOccupied returns true if PointStatus is Black or White
 //
@@ -366,15 +365,15 @@ func CurrentColor(mTyp PointStatus) (ret PointStatus) {
 	} else if mTyp == White {
 		ret = White
 	} else {
-		switch (mTyp) {
-			case AB_U, AB_W:
-				ret = Black
-			case AE_B, AE_W:
-				ret = Unocc
-			case AW_B, AW_U:
-				ret = White
-			default:
-				ret = Unocc	// ??? The "no-op" move types are the only ones not explicitly represented
+		switch mTyp {
+		case AB_U, AB_W:
+			ret = Black
+		case AE_B, AE_W:
+			ret = Unocc
+		case AW_B, AW_U:
+			ret = White
+		default:
+			ret = Unocc // ??? The "no-op" move types are the only ones not explicitly represented
 		}
 	}
 	return ret
@@ -388,15 +387,15 @@ func PreviousColor(mTyp PointStatus) (ret PointStatus) {
 	} else if mTyp == White {
 		ret = Unocc
 	} else {
-		switch (mTyp) {
-			case AB_U, AW_U:
-				ret = Unocc
-			case AB_W, AE_W:
-				ret = White
-			case AE_B, AW_B:
-				ret = Black
-			default:
-				ret = CurrentColor(mTyp)	// The "no-op" move types are the only ones not explicitly represented
+		switch mTyp {
+		case AB_U, AW_U:
+			ret = Unocc
+		case AB_W, AE_W:
+			ret = White
+		case AE_B, AW_B:
+			ret = Black
+		default:
+			ret = CurrentColor(mTyp) // The "no-op" move types are the only ones not explicitly represented
 		}
 	}
 	return ret
@@ -406,7 +405,7 @@ func PreviousColor(mTyp PointStatus) (ret PointStatus) {
 // For other values, the generic Unocc is returned.
 //
 func OppositeColor(c PointStatus) (ret PointStatus) {
-    if c == Black {
+	if c == Black {
 		ret = White
 	} else if c == White {
 		ret = Black
@@ -418,7 +417,7 @@ func OppositeColor(c PointStatus) (ret PointStatus) {
 
 // InitAbstHier must be called before a abstraction hierarchy can be used
 //
-func (abhr *AbstHier) InitAbstHier(c ColValue, r RowValue, upLev GraphLevel, doPlay bool) (*AbstHier) {
+func (abhr *AbstHier) InitAbstHier(c ColValue, r RowValue, upLev GraphLevel, doPlay bool) *AbstHier {
 	defer un(trace("InitAbstHier", 0, NilNodeLoc, 0, NilNodeLoc, nilArc, 0xFFFF))
 	// turn off tracing during InitAbstHi
 	saveTrace := TraceAH
