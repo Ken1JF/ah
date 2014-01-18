@@ -210,6 +210,15 @@ var PtTypeNames = [255]string{
 	//	UninitializedPt:	"¿",
 }
 
+// provide a String() function so fmt.Printf can print
+//
+func (pt PointType) String()  string {
+    if (int(pt) >= int(SingletonPt)) && (int(pt) <+ int(Line_7_Pt)) {
+        return PtTypeNames[pt]        
+    }
+    return "¿"
+}
+
 // ColValue and RowValue are types that represent column and row coordinates, respectively.
 // By making them different types, type checking can help avoid ordering errors.
 //
