@@ -55,6 +55,42 @@ const (
 	RightDir                             // c+1
 )
 
+// define print values, for debugging
+//
+func (d Direction) String() string {
+    switch d {
+        case NoDir:
+            return "No Direction"
+        case UpperDir:
+            return "Upper Direction"
+        case LeftDir:
+            return "Left Direction"
+        case LowerDir:
+            return "Lower Direction"
+        case RightDir:
+            return "Right Direction"
+    }
+        // is it a compound direction:
+    if (int(d) > int(NoDir)) && (int(d) < int(RightDir)*2 ) {
+        str := ""
+        if (int(d) & int(UpperDir)) > 0 {
+            str = str + "Upper "
+        }
+        if (int(d) & int(LeftDir)) > 0 {
+            str = str + "Left "
+        }
+        if (int(d) & int(LowerDir)) > 0 {
+            str = str + "Lower "
+        }
+        if (int(d) & int(RightDir)) > 0 {
+            str = str + "Right "
+        }
+        return str + "Directions"
+    }
+        // Unknown direction
+    return fmt.Sprintf("Unknown Direction:%d", int(d))
+}
+
 // PointType is a static classification of all board points
 // used in non-empty Graphs embedded on a rectangular grid.
 //
