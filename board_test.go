@@ -34,78 +34,75 @@ func ExamplePointType() {
 	for pt := SingletonPt; pt <= Line_7_Pt; pt++ {
 		switch pt {
             case SingletonPt:
-			fmt.Println(int(pt), "SingletonPt:", pt)
+                fmt.Println(int(pt), "SingletonPt:", pt)
             
             case LowerEndPt:
-			fmt.Println(int(pt), "LowerEndPt:", pt)
+                fmt.Println(int(pt), "LowerEndPt:", pt)
             case RightEndPt:
-			fmt.Println(int(pt), "RightEndPt:", pt)
+                fmt.Println(int(pt), "RightEndPt:", pt)
             case UpperEndPt:
-			fmt.Println(int(pt), "UpperEndPt:", pt)
+                fmt.Println(int(pt), "UpperEndPt:", pt)
             case LeftEndPt:
-			fmt.Println(int(pt), "LeftEndPt:", pt)
+                fmt.Println(int(pt), "LeftEndPt:", pt)
             
             case UpperLowerBridgePt:
-			fmt.Println(int(pt), "UpperLowerBridgePt:", pt)
+                fmt.Println(int(pt), "UpperLowerBridgePt:", pt)
             case LeftRightBridgePt:
-			fmt.Println(int(pt), "LeftRightBridgePt:", pt)
+                fmt.Println(int(pt), "LeftRightBridgePt:", pt)
             
             case UpperLeftCornerPt:
-			fmt.Println(int(pt), "UpperLeftCornerPt:", pt)
+                fmt.Println(int(pt), "UpperLeftCornerPt:", pt)
             case UpperRightCornerPt:
-			fmt.Println(int(pt), "UpperRightCornerPt:", pt)
+                fmt.Println(int(pt), "UpperRightCornerPt:", pt)
             case LowerRightCornerPt:
-			fmt.Println(int(pt), "LowerRightCornerPt:", pt)
+                fmt.Println(int(pt), "LowerRightCornerPt:", pt)
             case LowerLeftCornerPt:
-			fmt.Println(int(pt), "LowerLeftCornerPt:", pt)
+                fmt.Println(int(pt), "LowerLeftCornerPt:", pt)
             
             case UpperEdgePt:
-			fmt.Println(int(pt), "UpperEdgePt:", pt)
+                fmt.Println(int(pt), "UpperEdgePt:", pt)
             case LeftEdgePt:
-			fmt.Println(int(pt), "LeftEdgePt:", pt)
+                fmt.Println(int(pt), "LeftEdgePt:", pt)
             case LowerEdgePt:
-			fmt.Println(int(pt), "LowerEdgePt:", pt)
+                fmt.Println(int(pt), "LowerEdgePt:", pt)
             case RightEdgePt:
-			fmt.Println(int(pt), "RightEdgePt:", pt)
+                fmt.Println(int(pt), "RightEdgePt:", pt)
             
             case CenterPt:
-			fmt.Println(int(pt), "CenterPt:", pt)
+                fmt.Println(int(pt), "CenterPt:", pt)
             
             case HoshiPt:
-			fmt.Println(int(pt), "HoshiPt:", pt)
+                fmt.Println(int(pt), "HoshiPt:", pt)
             
             case Corner_2_2_Pt:
-			fmt.Println(int(pt), "Corner_2_2_Pt:", pt)
+                fmt.Println(int(pt), "Corner_2_2_Pt:", pt)
             case Line_2_Pt:
-			fmt.Println(int(pt), "Line_2_Pt:", pt)
+                fmt.Println(int(pt), "Line_2_Pt:", pt)
             case Corner_3_3_Pt:
-			fmt.Println(int(pt), "Corner_3_3_Pt:", pt)
+                fmt.Println(int(pt), "Corner_3_3_Pt:", pt)
             case Line_3_Pt:
-			fmt.Println(int(pt), "Line_3_Pt:", pt)
+                fmt.Println(int(pt), "Line_3_Pt:", pt)
             case Corner_4_4_Pt:
-			fmt.Println(int(pt), "Corner_4_4_Pt:", pt)
+                fmt.Println(int(pt), "Corner_4_4_Pt:", pt)
             case Line_4_Pt:
-			fmt.Println(int(pt), "Line_4_Pt:", pt)
+                fmt.Println(int(pt), "Line_4_Pt:", pt)
             case Corner_5_5_Pt:
-			fmt.Println(int(pt), "Corner_5_5_Pt:", pt)
+                fmt.Println(int(pt), "Corner_5_5_Pt:", pt)
             case Line_5_Pt:
-			fmt.Println(int(pt), "Line_5_Pt:", pt)
+                fmt.Println(int(pt), "Line_5_Pt:", pt)
             case Corner_6_6_Pt:
-			fmt.Println(int(pt), "Corner_6_6_Pt:", pt)
+                fmt.Println(int(pt), "Corner_6_6_Pt:", pt)
             case Line_6_Pt:
-			fmt.Println(int(pt), "Line_6_Pt:", pt)
+                fmt.Println(int(pt), "Line_6_Pt:", pt)
             case Corner_7_7_Pt:
-			fmt.Println(int(pt), "Corner_7_7_Pt:", pt)
+                fmt.Println(int(pt), "Corner_7_7_Pt:", pt)
             case Line_7_Pt:
-			fmt.Println(int(pt), "Line_7_Pt:", pt)
-                //			case Black_Occ_Pt:
-                //				fmt.Println("Black_Occ_Pt:", pt)
-                //			case White_Occ_Pt:
-                //				fmt.Println("White_Occ_Pt:", pt)
+                fmt.Println(int(pt), "Line_7_Pt:", pt)
+
 			break loop // loop will not terminate 255++ => 0
             
-                       //			case UninitializedPt:
-                       //				fmt.Println("UninitializedPt:", pt)
+            // case UninitializedPt:
+            //      fmt.Println("UninitializedPt:", pt)
             
             default:
                 //				fmt.Println(" skipping:", pt)
@@ -144,6 +141,63 @@ func ExamplePointType() {
 }
 
 func ExamplePointStatus() {
-    
-    
+	for ps := UndefinedPointStatus; ps <= LastPointStatus; ps++ {
+		switch ps {
+            
+            case UndefinedPointStatus,
+                Black, White,
+                AB_U, AB_W, AE_B, AE_W, AW_B, AW_U,
+                // Unoccupied, generic value
+                Unocc,
+                // No Adjacent Stones:
+                B0W0,
+                // Single Adjacent Stone:
+                W1, B1,
+                // Two Adjacent Stones:
+                W2, B1W1, W1B1, B2,
+                // Three Adjacent Stones:
+                B3, B2W1, B1W2, W3, WBB, WBW, BWB, W2B1,
+                // Four Adjacent Stones:
+                B4, B3W1, BWBW, BBWW, B1W3, W4,
+            
+                LastPointStatus:
+			fmt.Println(ps, int(ps))
+            
+            default:
+                //				fmt.Println(" skipping:", ps)
+		}
+	}
+    // Output:
+    // UndefinedPointStatus 0
+    // Black 1
+    // White 2
+    // AB_U 3
+    // AB_W 4
+    // AE_B 5
+    // AE_W 6
+    // AW_B 7
+    // AW_U 8
+    // Unocc 9
+    // B0W0 10
+    // W1 11
+    // B1 12
+    // W2 13
+    // B1W1 14
+    // W1B1 15
+    // B2 16
+    // B3 17
+    // B2W1 18
+    // B1W2 19
+    // W3 20
+    // WBB 21
+    // WBW 22
+    // BWB 23
+    // W2B1 24
+    // B4 25
+    // B3W1 26
+    // BWBW 27
+    // BBWW 28
+    // B1W3 29
+    // W4 30
+    // LastPointStatus 31
 }
