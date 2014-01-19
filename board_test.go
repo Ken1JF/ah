@@ -5,7 +5,7 @@ import (
     "fmt"
 )
 
-func ExampleBoard() {
+func ExampleDirection() {
     for d := 0; d < int(RightDir)*2 ; d++ {
         fmt.Println(Direction(d))
     }
@@ -26,10 +26,9 @@ func ExampleBoard() {
     // Upper Lower Right Directions
     // Left Lower Right Directions
     // Upper Left Lower Right Directions
-
 }
 
-func ExampleBoard2() {
+func ExamplePointType() {
     // Check  PointType definitions:
     loop:
 	for pt := SingletonPt; pt <= Line_7_Pt; pt++ {
@@ -142,4 +141,9 @@ func ExampleBoard2() {
     // 191 Line_6_Pt: ┼
     // 207 Corner_7_7_Pt: ╬
     // 223 Line_7_Pt: ¿
+}
+
+func ExamplePointStatus() {
+    
+    
 }

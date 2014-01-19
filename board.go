@@ -224,6 +224,27 @@ func (pt PointType) String()  string {
 //
 type ColValue uint8
 type RowValue uint8
+ 
+// provide String() function for fmt.Printf
+//
+func (col ColValue) String() string {
+    colLabels := "ABCDEFGHJKLMNOPQRST"
+    if (col >= 0) && (uint8(col) < MaxBoardSize) {
+        return string(colLabels[col])
+    }
+    return "?"
+}
+
+// provide String() function for fmt.Printf
+// NOTE: this is for debugging, mainly
+// for Board display, row+1 should be boardSize-row
+//
+func (row RowValue) String() string {
+    if (row >= 0) && (uint8(row) < MaxBoardSize) {
+        return fmt.Sprintf("%d", row+1)
+    }
+    return "?"
+}
 
 // TODO:(align) if alignment in 6g compiler is improved, go back to using this:
 //
@@ -234,8 +255,30 @@ type RowValue uint8
 // to board coordinates.
 // At Go String and higher abstractions, NodeLoc is an index into
 // an array of Nodes.
+// In a known context, cast to the more specfic types:
 //
 type NodeLoc uint16
+
+// Board level NodeLoc
+//
+type NodeLocCR NodeLoc
+
+// String() function for fmt.Printf
+//
+func (nl NodeLocCR) String() string {
+    c,r := GetColRow(NodeLoc(nl))
+    return c.String() + r.String()
+}
+
+// string, group, and higher abstraction levels
+//
+type NodeLocIdx NodeLoc
+
+// String() function for fmt.Printf
+//
+func (nl NodeLocIdx) String() string {
+    return fmt.Sprintf("%d", int(nl))
+}
 
 // TODO:(align) if alignment in 6g compiler is improved, go back to using this:
 //
@@ -287,7 +330,6 @@ var ( // TODO: redo as const???
 // Initialization function for this file
 //
 func init() {
-	// TODO: change the representation of PassNodeLoc, so we can support larger boards
 	PassNodeLoc = MakeNodeLoc(ColValue(MaxBoardSize), RowValue(MaxBoardSize))
 	IllegalNodeLoc = MakeNodeLoc(ColValue(MaxBoardSize+1), RowValue(MaxBoardSize+1))
 }
@@ -308,26 +350,35 @@ type MoveRecord struct {
 	koPoint     NodeLoc     // koPoint before this move
 }
 
-func (mv *MoveRecord) PrintMove(idx int) {
-	if idx >= 0 {
-		fmt.Print("Move[", idx, "]:")
-	} else {
-		fmt.Print("Move:")
-	}
+// String() function for fmt.Printf
+//
+func (mv *MoveRecord) String() string {
+    var s string
 	c, r := GetColRow(mv.moveLoc)
-	fmt.Print(" Loc: (", c, ",", r, ") Type: ", mv.moveType, " Num:", mv.moveNum)
+    s = fmt.Sprintf("Loc: %v%v, Type: %v, Num: %d, ", c, r, mv.moveType, mv.moveNum)
 	if mv.capturedBy != nilMovNum {
-		fmt.Print(" CapdBy:", mv.capturedBy)
+		s = fmt.Sprintf("%s CapdBy: %d", s, mv.capturedBy)
 	}
 	if mv.nextCapture != nilMovNum {
-		fmt.Print(" NextCap:", mv.nextCapture)
+		s = fmt.Sprintf("%s NextCap: %d", s, mv.nextCapture)
 	}
 	if mv.firstCap != nilMovNum {
-		fmt.Print(" FirstCap:", mv.firstCap)
+		s = fmt.Sprintf("%s FirstCap: %d",s, mv.firstCap)
 	}
 	if mv.koPoint != NilNodeLoc {
-		fmt.Print(" Ko:", mv.koPoint)
+        c, r := GetColRow(mv.koPoint)
+		s = fmt.Sprintf("%s Ko: %v%v", s, c, r)
 	}
+    return s
+}
+
+func (mv *MoveRecord) PrintMove(idx int) {
+	if idx >= 0 {
+		fmt.Print("Move[", idx, "]: ")
+	} else {
+		fmt.Print("Move: ")
+	}
+    fmt.Printf("%s", mv.String())
 	fmt.Println(" ")
 }
 
