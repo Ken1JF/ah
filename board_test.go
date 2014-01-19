@@ -201,3 +201,34 @@ func ExamplePointStatus() {
     // W4 30
     // LastPointStatus 31
 }
+
+func ExampleAhTypeSizes() {
+    PrintAhTypeSizes()
+    // Output:
+    // Type Direction size 1 alignment 1
+    // Type PointType size 1 alignment 1
+    // Type ColValue size 1 alignment 1
+    // Type RowValue size 1 alignment 1
+    // Type NodeLoc size 2 alignment 2
+    // Type NodeLocList size 24 alignment 8
+    // Type MoveRecord size 14 alignment 2
+    // Type Board size 112 alignment 8
+    // Type SearchStack size 40 alignment 8
+    // Type GraphNodeLocFunc size 8 alignment 8
+    // Type NodeLocFuncBool size 8 alignment 8
+    // Type BoardTrans size 1 alignment 1
+    // Type ArcIdx size 2 alignment 2
+    // Type GraphMark size 1 alignment 1
+    // Type GraphNode size 16 alignment 2
+    // Type GraphArc size 10 alignment 2
+    // Type CompStateFunc size 8 alignment 8
+    // Type ChangeRequest size 4 alignment 2
+    // Type Graph size 104 alignment 8
+    // Type NodeLocFunc size 8 alignment 8
+    // Type ArcFunc size 8 alignment 8
+    // Type PointStatus size 2 alignment 2
+    // Type GraphLevel size 1 alignment 1
+    // Type AbstHier size 800 alignment 8
+    // Type NodeStatus size 2 alignment 2
+    // Type StringStatus size 2 alignment 2
+}

@@ -920,7 +920,7 @@ func printSizeAlign(s string, sz uintptr, al uintptr) {
 	fmt.Println("Type", s, "size", sz, "alignment", al)
 }
 
-func PrintAhStructSizes() {
+func PrintAhTypeSizes() {
 	// board.go
 	var d Direction
 	var pt PointType
