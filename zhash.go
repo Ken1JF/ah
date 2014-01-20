@@ -31,7 +31,9 @@ var KoZKey [MaxBoardSize][MaxBoardSize]ZobristCode
 // var BlackToPlayZKey ZobristCode don't need, redundant
 var WhiteToPlayZKey ZobristCode
 
-var keyCount int64
+// should be private, but printed in zhash_test.go
+var KeyCount int64
+
 var checkKeys map[ZobristCode]int64
 
 const checkKeysNeeded int = 1085
@@ -47,8 +49,8 @@ func newZobristKey() ZobristCode {
 			panic("Zobrist Duplicate Keys")
 		}
 	}
-	keyCount += 1
-	checkKeys[nzc] = keyCount
+	KeyCount += 1
+	checkKeys[nzc] = KeyCount
 	return nzc
 }
 

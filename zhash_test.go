@@ -1,11 +1,12 @@
-package ah
+package ah_test
 
 import (
 	"fmt"
+	. "gitHub.com/Ken1JF/ahgo/ah"
 )
 
 func ExamplePrintZKeys() {
-	fmt.Println("keyCount =", keyCount)
+	fmt.Println("keyCount =", KeyCount)
 	fmt.Println("ZSeed =", ZSeed)
 	var i, j uint8
 	fmt.Println("BlackZKey =")
