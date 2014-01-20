@@ -23,7 +23,6 @@ import (
 
 // Token source positions are represented by a Position value.
 // A Position is valid if the line number is > 0.
-//
 type Position struct {
 	Filename string // filename, if any
 	Offset   int    // byte offset, starting at 0
@@ -33,13 +32,12 @@ type Position struct {
 
 // Pos is an accessor method for anonymous Position fields.
 // It returns its receiver.
-//
 func (pos *Position) Pos() Position { return *pos }
 
 // IsValid returns true if the position is valid.
-//
 func (pos *Position) IsValid() bool { return pos.Line > 0 }
 
+// String() string function for fmt.Print
 func (pos *Position) String() string {
 	s := pos.Filename
 	if pos.IsValid() {
@@ -61,14 +59,12 @@ var NoPos Position
 // The position Pos, if valid, points to the beginning
 // of the offending token, and the error condition is described
 // by Msg.
-//
 type ErrorWithPosition struct {
 	Pos Position
 	Msg string
 }
 
 // ErrorWithPosition implements the error interface
-//
 func (e ErrorWithPosition) Error() string {
 	if e.Pos.Filename != "" || e.Pos.IsValid() {
 		// don't print "<unknown position>"
@@ -79,7 +75,6 @@ func (e ErrorWithPosition) Error() string {
 
 // ErrorList is a list of *Errors.
 // The zero value for an ErrorList is an empty ErrorList ready to use.
-//
 type ErrorList []*ErrorWithPosition
 
 // Add adds an ErrorWithPosition with given position and error message to an ErrorList.
@@ -114,15 +109,16 @@ func (p ErrorList) Less(i, j int) bool {
 	return false
 }
 
-// Sort sorts an ErrorList. *ErrorWithPosition entries are sorted by position,
-// other errors are sorted by error message, and before any *ErrorWithPosition
-// entry.
-//
+// Sort sorts an ErrorList.
+// *ErrorWithPosition entries are sorted by position
+// other errors are sorted by error message,
+// and before any *ErrorWithPosition entry.
 func (p ErrorList) Sort() {
 	sort.Sort(p)
 }
 
-// RemoveMultiples sorts an ErrorList and removes all but the first error per line.
+// RemoveMultiples sorts an ErrorList
+// and removes all but the first error per line.
 func (p *ErrorList) RemoveMultiples() {
 	sort.Sort(p)
 	var last Position // initial last.Line is != any legal error line
@@ -138,13 +134,11 @@ func (p *ErrorList) RemoveMultiples() {
 }
 
 // Return the number of errors
-//
 func (p ErrorList) ErrorCount() int {
 	return len(p)
 }
 
 // An ErrorList implements the error interface.
-//
 func (p ErrorList) Error() string {
 	switch len(p) {
 	case 0:
@@ -167,7 +161,6 @@ func (p ErrorList) Err() error {
 // PrintError is a utility function that prints a list of errors to w,
 // one error per line, if the err parameter is an ErrorList. Otherwise
 // it prints the err string.
-//
 func PrintError(w io.Writer, err error) {
 	if list, ok := err.(ErrorList); ok {
 		for _, e := range list {

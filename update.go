@@ -37,7 +37,6 @@ func PrintNodeLoc(gl GraphLevel, nl NodeLoc, str string) {
 }
 
 // trace and un provide tracing capability.
-//
 func trace(msg string, gl GraphLevel, nl NodeLoc, gl2 GraphLevel, nl2 NodeLoc, ai ArcIdx, ns NodeStatus) string {
 	if TraceAH {
 		fmt.Print("Entering ", msg, " Level ", int(gl))
@@ -65,19 +64,16 @@ func un(msg string) {
 }
 
 // SetAHTrace turns tracing on and off
-//
 func SetAHTrace(newSt bool) {
 	TraceAH = newSt
 }
 
 // GetAHTrace turns tracing on and off
-//
 func GetAHTrace() bool {
 	return TraceAH
 }
 
 // GraphLevel is the type for levels of the Go Abstraction Hierarchy.
-//
 type GraphLevel uint8
 
 const (
@@ -90,7 +86,6 @@ const (
 )
 
 // AbstHier is the Abstraction Hierarchy structure
-//
 type AbstHier struct {
 	// exported temporarily for test_ahgo.go
 	Graphs [6]Graph
@@ -109,7 +104,6 @@ type AbstHier struct {
 }
 
 // GetNodeCounts counts nodes and members
-//
 func (abhr *AbstHier) GetNodeCounts(gl GraphLevel) (b_nodes int, b_members int, w_nodes int, w_members int, u_nodes int, u_members int) {
 	var color uint16
 	var count int
@@ -150,7 +144,6 @@ func (abhr *AbstHier) GetNodeCounts(gl GraphLevel) (b_nodes int, b_members int, 
 }
 
 // PrintGraph prints the graph
-//
 func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 	var color uint16
 	var count int
@@ -228,7 +221,6 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 }
 
 // DecrementMovesPrinted is used when backtracking, i.e. by UndoBoardMove
-//
 func (abhr *AbstHier) DecrementMovesPrinted() {
 	if abhr.moves_printed > 0 {
 		abhr.moves_printed -= 1
@@ -236,7 +228,6 @@ func (abhr *AbstHier) DecrementMovesPrinted() {
 }
 
 // SetBackMovesPrinted is used when moves have changed, i.e. when doing and undoing captures.
-//
 func (abhr *AbstHier) SetBackMovesPrinted(changed int16) {
 	if abhr.moves_printed > (int(changed) - 1) {
 		abhr.moves_printed = int(changed) - 1
@@ -245,7 +236,6 @@ func (abhr *AbstHier) SetBackMovesPrinted(changed int16) {
 
 // PrintAbstHier prints the StringLevel and higher graphs,
 // upto and including the updtLev.
-//
 func (abhr *AbstHier) PrintAbstHier(str string, printUnocc bool) {
 	new_black_nodes, new_black_members, new_white_nodes, new_white_members, new_unocc_nodes, new_unocc_members := abhr.GetNodeCounts(StringLevel)
 	if (new_black_nodes != abhr.black_nodes) || (new_black_members != abhr.black_members) ||
@@ -267,13 +257,12 @@ func (abhr *AbstHier) PrintAbstHier(str string, printUnocc bool) {
 	}
 }
 
-//
-//
+// set the hoshi points based on board size
 func (abhr *AbstHier) initHoshiPts() {
 	// Set the hoshi points:
 	if (abhr.colSize >= 13) && (abhr.rowSize >= 13) {
 		// Set hoshi points on the fourth line.
-		//
+
 		// Set the corner hoshi points:
 		abhr.addHoshiPt(3, 3)
 		abhr.addHoshiPt(abhr.colSize-4, 3)
@@ -323,7 +312,6 @@ var saveAHTrace bool               // TODO: make these parser instance variables
 
 // setupAbstHier either clears an existing AH, or allocates and initializes a new AH.
 // It is called by InitAbstHier
-//
 func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev GraphLevel, doPlay bool,
 	brdCHi CompStateFunc, brdCNw CompStateFunc,
 	strCHi CompStateFunc, strCNw CompStateFunc,
@@ -449,7 +437,6 @@ func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev Gr
 }
 
 // FindMoveNumber searches the Moves to find the most recent move at a point
-//
 func (abhr *AbstHier) FindMoveNumber(nl NodeLoc) int16 {
 	var movNum int16 = nilMovNum
 	var i int16
@@ -462,7 +449,6 @@ func (abhr *AbstHier) FindMoveNumber(nl NodeLoc) int16 {
 }
 
 // NumElements returns the number of elements in a partition
-//
 func (abhr *AbstHier) NumElements(gl GraphLevel, aMem NodeLoc) (ret int) {
 	g := &abhr.Graphs[gl]
 	hiG := &abhr.Graphs[gl+1]
@@ -477,7 +463,6 @@ func (abhr *AbstHier) NumElements(gl GraphLevel, aMem NodeLoc) (ret int) {
 }
 
 // AddMember adda a member node to a higher node member list
-//
 func (abhr *AbstHier) AddMember(gl GraphLevel, mem NodeLoc, hiNod NodeLoc) {
 	defer un(trace("AddMember", gl, mem, gl+1, hiNod, nilArc, 0xFFFF))
 	g := &abhr.Graphs[gl]
@@ -488,7 +473,6 @@ func (abhr *AbstHier) AddMember(gl GraphLevel, mem NodeLoc, hiNod NodeLoc) {
 }
 
 // DeleteMember deletes a member node from a higer node member list
-//
 func (abhr *AbstHier) DeleteMember(gl GraphLevel, mem NodeLoc, hiNod NodeLoc) {
 	defer un(trace("DeleteMember", gl, mem, gl+1, hiNod, nilArc, 0xFFFF))
 	g := &abhr.Graphs[gl]
@@ -516,7 +500,6 @@ func (abhr *AbstHier) DeleteMember(gl GraphLevel, mem NodeLoc, hiNod NodeLoc) {
 }
 
 // EachMember visits each member of node in an abstraction hierarchy
-//
 func (abhr *AbstHier) EachMember(gl GraphLevel, nl NodeLoc, visit NodeLocFunc) {
 	// TODO: check that gl >= StringLevel?
 	g := &abhr.Graphs[gl]
@@ -532,7 +515,6 @@ func (abhr *AbstHier) EachMember(gl GraphLevel, nl NodeLoc, visit NodeLocFunc) {
 
 // AddNodeLow adds a graph node into an abstraction hierarchy
 // It returns the hiNod, and a bool to indicate if the hiNod is new
-//
 func (abhr *AbstHier) AddNodeLow(gl GraphLevel, lowSt uint16) (hiNod NodeLoc, isNew bool) {
 	defer un(trace("AddNodeLow", 0, NilNodeLoc, 0, NilNodeLoc, nilArc, NodeStatus(lowSt)))
 	g := &abhr.Graphs[gl]
@@ -544,7 +526,6 @@ func (abhr *AbstHier) AddNodeLow(gl GraphLevel, lowSt uint16) (hiNod NodeLoc, is
 }
 
 // AddNodeHigh adds a node to a graph
-//
 func (abhr *AbstHier) AddNodeHigh(gl GraphLevel, chgNl NodeLoc, newSt uint16) bool {
 	defer un(trace("AddNodeHigh", gl, chgNl, 0, NilNodeLoc, nilArc, NodeStatus(newSt)))
 	var sameNod NodeLoc = NilNodeLoc
@@ -574,7 +555,6 @@ func (abhr *AbstHier) AddNodeHigh(gl GraphLevel, chgNl NodeLoc, newSt uint16) bo
 }
 
 // CheckMerge is called after an arc is added to see if it causes a merge
-//
 func (abhr *AbstHier) CheckMerge(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) {
 	defer un(trace("CheckMerge", gl, n1, gl, n2, nilArc, 0xFFFF))
 	g := &abhr.Graphs[gl]
@@ -643,7 +623,6 @@ func (abhr *AbstHier) CheckMerge(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) {
 // CheckSplit checks if removal of arc from nod1 to nod2 causes a split.
 // If so, perform the split.
 // Returns the original component, in case of multiple splits.
-//
 func (abhr *AbstHier) CheckSplit(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret NodeLoc) {
 	defer un(trace("CheckSplit", gl, n1, gl, n2, nilArc, 0xFFFF))
 	if TraceAH {
@@ -757,7 +736,6 @@ func (abhr *AbstHier) CheckSplit(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret Nod
 }
 
 // DeleteArcHigh deletes the image of an arc from the high graph
-//
 func (abhr *AbstHier) DeleteArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) {
 	defer un(trace("DeleteArcHigh", gl, chgNod, gl, adjNod, nilArc, 0xFFFF))
 	g := &abhr.Graphs[gl]
@@ -784,7 +762,6 @@ func (abhr *AbstHier) DeleteArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLo
 }
 
 // ChangeNodeState is called to change the NodeStatus of a GraphNode
-//
 func (abhr *AbstHier) ChangeNodeState(gl GraphLevel, chgNod NodeLoc, newState NodeStatus, doMrgSplt bool) {
 	defer un(trace("ChangeNodeState", gl, chgNod, 0, NilNodeLoc, nilArc, newState))
 	if TraceAH {
@@ -861,7 +838,6 @@ func (abhr *AbstHier) ChangeNodeState(gl GraphLevel, chgNod NodeLoc, newState No
 }
 
 // AddArcHigh is called to add an arc connecting two adjacent Nodes.
-//
 func (abhr *AbstHier) AddArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) {
 	defer un(trace("AddArcHigh", gl, chgNod, gl, adjNod, nilArc, 0xFFFF))
 	var highA ArcIdx = nilArc
@@ -887,7 +863,6 @@ func (abhr *AbstHier) AddArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) 
 }
 
 // AddArcLow is called to add an arc into an abstraction hierarchy
-//
 func (abhr *AbstHier) AddArcLow(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) ArcIdx {
 	defer un(trace("AddArcLow", gl, chgNod, gl, adjNod, nilArc, 0xFFFF))
 	newA := nilArc
@@ -903,7 +878,6 @@ func (abhr *AbstHier) AddArcLow(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) A
 // present, but are not found.
 // TODO: add more debug info?
 // TODO: design a way to restart???
-//
 func FatalAbstHierError(str string) {
 	fmt.Println("Fatal Error:", str)
 	os.Exit(999)
@@ -911,8 +885,6 @@ func FatalAbstHierError(str string) {
 
 // Some functions to print the size and alignment of types:
 // TODO: delete when no longer needed (development aids)
-//
-//func printSizeAlign(s string, sz int, al int) {
 func printSizeAlign(s string, sz uintptr, al uintptr) {
 	fmt.Println("Type", s, "size", sz, "alignment", al)
 }

@@ -29,7 +29,6 @@ import (
 // the order is reversed:
 //		Nodes[nl]
 // The r value selects a row, and c selects a column within the row.
-//
 const (
 	MaxBoardSize uint8 = 19
 	MaxRows      uint8 = MaxBoardSize
@@ -41,12 +40,10 @@ const (
 
 // These Direction definitions refer to the canonical board orientation,
 // which may be rotated or reflected for display, etc.
-//
 type Direction uint8
 
 // These costants provide a basis for classifying points in an N X M board,
 // indicating that a point has an adjacent point in the given direction.
-//
 const (
 	NoDir    Direction = iota            // singleton point
 	UpperDir Direction = 1 << (iota - 1) // r-1
@@ -55,8 +52,7 @@ const (
 	RightDir                             // c+1
 )
 
-// define print values, for debugging
-//
+// define print values
 func (d Direction) String() string {
 	switch d {
 	case NoDir:
@@ -99,19 +95,18 @@ func (d Direction) String() string {
 // directions in which the point has a connection.
 //
 // There are also advanced codes (specialized _cetner_pt codes)
-
 type PointType uint8
 
 const (
 
 	// SingletonPt has no connection.
 	// It occurs only on a 1 x 1 board.
-	//
+
 	SingletonPt PointType = PointType(NoDir)
 
 	// An EndPt has only one connection.
 	// They occur on the ends of 1 x N and N x 1 boards.
-	//
+
 	LowerEndPt PointType = PointType(UpperDir)
 	RightEndPt PointType = PointType(LeftDir)
 	UpperEndPt PointType = PointType(LowerDir)
@@ -119,13 +114,13 @@ const (
 
 	// A BridgePt has two opposite connections.
 	// They occur in the internal points of 1 x N and N x 1 boards.
-	//
+
 	UpperLowerBridgePt PointType = PointType(LowerDir + UpperDir)
 	LeftRightBridgePt  PointType = PointType(RightDir + LeftDir)
 
 	// A CornerPt has two adjacent connections.
 	// They occur on N x M boards, both N and M >= 2.
-	//
+
 	UpperLeftCornerPt  PointType = PointType(LowerDir + RightDir)
 	UpperRightCornerPt PointType = PointType(LowerDir + LeftDir)
 	LowerRightCornerPt PointType = PointType(UpperDir + LeftDir)
@@ -133,22 +128,22 @@ const (
 
 	// An EdgePt has three adjacent connections.
 	// They occur on boards with either N or M >= 3.
-	//
+
 	UpperEdgePt PointType = PointType(LeftDir + LowerDir + RightDir)
 	LeftEdgePt  PointType = PointType(UpperDir + LowerDir + RightDir)
 	LowerEdgePt PointType = PointType(UpperDir + LeftDir + RightDir)
 	RightEdgePt PointType = PointType(UpperDir + LeftDir + LowerDir)
 
 	// A CenterPt has four adjacent connections.
-	//
+
 	CenterPt PointType = PointType(UpperDir + LeftDir + LowerDir + RightDir)
 
 	// A HoshiPt is a specially marked CenterPt.
-	//
+
 	HoshiPt PointType = PointType(CenterPt + (1 << 4))
 
 	// Corner N-N and Line N points
-	//
+
 	Corner_2_2_Pt PointType = PointType(CenterPt + (2 << 4))
 	Line_2_Pt     PointType = PointType(CenterPt + (3 << 4))
 	Corner_3_3_Pt PointType = PointType(CenterPt + (4 << 4))
@@ -163,8 +158,8 @@ const (
 	Line_7_Pt     PointType = PointType(CenterPt + (13 << 4))
 	// TODO: do we need UninitializedPt?
 	// Or is SingletonPt the correct "zero" state? (i.e. unconnected)
-	//
-//	UninitializedPt	PointType = PointType(CenterPt + (14 << 4))
+
+	// UninitializedPt	PointType = PointType(CenterPt + (14 << 4))
 )
 
 var PtTypeNames = [255]string{
@@ -206,12 +201,11 @@ var PtTypeNames = [255]string{
 	Line_7_Pt:     "┼",
 	// TODO: do we need UninitializedPt?
 	// Or is SingletonPt the correct "zero" state? (i.e. unconnected)
-	//
-	//	UninitializedPt:	"¿",
+
+	// UninitializedPt:	"¿",
 }
 
 // provide a String() function so fmt.Printf can print
-//
 func (pt PointType) String() string {
 	if (int(pt) >= int(SingletonPt)) && (int(pt) <= int(Line_7_Pt)) {
 		return PtTypeNames[pt]
@@ -221,12 +215,10 @@ func (pt PointType) String() string {
 
 // ColValue and RowValue are types that represent column and row coordinates, respectively.
 // By making them different types, type checking can help avoid ordering errors.
-//
 type ColValue uint8
 type RowValue uint8
 
 // provide String() function for fmt.Printf
-//
 func (col ColValue) String() string {
 	colLabels := "ABCDEFGHJKLMNOPQRST"
 	if (col >= 0) && (uint8(col) < MaxBoardSize) {
@@ -238,7 +230,6 @@ func (col ColValue) String() string {
 // provide String() function for fmt.Printf
 // NOTE: this is for debugging, mainly
 // for Board display, row+1 should be boardSize-row
-//
 func (row RowValue) String() string {
 	if (row >= 0) && (uint8(row) < MaxBoardSize) {
 		return fmt.Sprintf("%d", row+1)
@@ -247,7 +238,7 @@ func (row RowValue) String() string {
 }
 
 // TODO:(align) if alignment in 6g compiler is improved, go back to using this:
-//
+
 //type LocValue uint16
 
 // NodeLoc is a type overload in Abstractions Hierarchies.
@@ -256,32 +247,27 @@ func (row RowValue) String() string {
 // At Go String and higher abstractions, NodeLoc is an index into
 // an array of Nodes.
 // In a known context, cast to the more specfic types:
-//
 type NodeLoc uint16
 
 // Board level NodeLoc
-//
 type NodeLocCR NodeLoc
 
 // String() function for fmt.Printf
-//
 func (nl NodeLocCR) String() string {
 	c, r := GetColRow(NodeLoc(nl))
 	return c.String() + r.String()
 }
 
 // string, group, and higher abstraction levels
-//
 type NodeLocIdx NodeLoc
 
 // String() function for fmt.Printf
-//
 func (nl NodeLocIdx) String() string {
 	return fmt.Sprintf("%d", int(nl))
 }
 
 // TODO:(align) if alignment in 6g compiler is improved, go back to using this:
-//
+
 //type NodeLoc struct {
 //	Location LocValue
 //}
@@ -289,7 +275,6 @@ func (nl NodeLocIdx) String() string {
 type NodeLocList []NodeLoc
 
 // NodeLocList satisfies the sort interface:
-//
 func (p NodeLocList) Len() int {
 	return len(p)
 }
@@ -306,7 +291,6 @@ func (p NodeLocList) Less(i, j int) bool {
 }
 
 // GetColRow returns the Col and Row portions of a NodeLoc
-//
 func GetColRow(loc NodeLoc) (col ColValue, row RowValue) {
 	row = RowValue((int(loc) >> RowShift) & ColMask)
 	col = ColValue(int(loc) & ColMask)
@@ -314,21 +298,18 @@ func GetColRow(loc NodeLoc) (col ColValue, row RowValue) {
 }
 
 // MakeNodeLoc returns a NodeLoc with the given Col and Row values
-//
 func MakeNodeLoc(col ColValue, row RowValue) (nl NodeLoc) {
 	nl = NodeLoc(((int(row) & ColMask) << RowShift) | (int(col) & ColMask))
 	return nl
 }
 
 // Some useful global variable values
-//
 var ( // TODO: redo as const???
 	PassNodeLoc    NodeLoc
 	IllegalNodeLoc NodeLoc
 )
 
 // Initialization function for this file
-//
 func init() {
 	PassNodeLoc = MakeNodeLoc(ColValue(MaxBoardSize), RowValue(MaxBoardSize))
 	IllegalNodeLoc = MakeNodeLoc(ColValue(MaxBoardSize+1), RowValue(MaxBoardSize+1))
@@ -339,7 +320,6 @@ func init() {
 // This allows an array to serve as a stack for use in traversing a tree of Move actions.
 // The color of the moveLoc before and after the move is known from the moveType
 // And information about captures and kos are stored so they can be restored.
-//
 type MoveRecord struct {
 	moveLoc     NodeLoc     // Location where the change occurs (off board for Pass)
 	moveType    PointStatus // Black, White, AB_U, AB_W, AE_B, AE_W, AW_B, and AW_U
@@ -351,7 +331,6 @@ type MoveRecord struct {
 }
 
 // String() function for fmt.Printf
-//
 func (mv *MoveRecord) String() string {
 	var s string
 	c, r := GetColRow(mv.moveLoc)
@@ -385,14 +364,12 @@ func (mv *MoveRecord) PrintMove(idx int) {
 const nilMovNum int16 = -1
 
 // GetPointType retrieves the static PointType of a Point (stored in inList).
-//
 func (bp *GraphNode) GetPointType() PointType {
 	return PointType(bp.inList)
 }
 
 // GetPointColRow retrieves the NodeLoc of a Point (stored in firstMem),
 // and returns the column and row components.
-//
 func (bp *GraphNode) GetPointColRow() (ColValue, RowValue) {
 	nl := bp.firstMem
 	c, r := GetColRow(nl)
@@ -400,7 +377,6 @@ func (bp *GraphNode) GetPointColRow() (ColValue, RowValue) {
 }
 
 // MoveHashList records the move index and stone counts associated with a board position
-//
 type MoveHashList struct {
 	moveIdx        uint16 // index into movs[]
 	bCount, wCount uint8  // black and white stone stone count, mode 256
@@ -408,7 +384,6 @@ type MoveHashList struct {
 }
 
 // Board holds the basic elements to record a Go game
-//
 type Board struct {
 	// hoshi points on the board:
 	hoshiPts NodeLocList
@@ -441,13 +416,11 @@ type Board struct {
 }
 
 // GetNMoves returns the number of moves currently stored in the movs array
-//
 func (brd *Board) GetNMoves() int {
 	return int(brd.numMoves)
 }
 
 // setSize sets the size of the board, and calls initBoardPoints
-//
 func (abhr *AbstHier) setSize(csz ColValue, rsz RowValue) {
 	abhr.colSize = csz
 	abhr.rowSize = rsz
@@ -461,7 +434,6 @@ func (abhr *AbstHier) setSize(csz ColValue, rsz RowValue) {
 }
 
 // addHoshiPt set the Board point, and puts the point in the hoshiPts array.
-//
 func (abhr *AbstHier) addHoshiPt(c ColValue, r RowValue) {
 	nl := MakeNodeLoc(c, r)
 	abhr.Graphs[PointLevel].Nodes[nl].inList = ArcIdx(HoshiPt)
@@ -469,7 +441,6 @@ func (abhr *AbstHier) addHoshiPt(c ColValue, r RowValue) {
 }
 
 // OnBoard returns true if the point is on the board
-//
 func (brd *Board) OnBoard(nl NodeLoc) (ret bool) {
 	c, r := GetColRow(nl)
 	//    fmt.Printf(" c = %d, brd.colSize = %d. r = %d, brd.rowSize = %d\n", c, brd.colSize, r, brd.rowSize)
@@ -480,14 +451,12 @@ func (brd *Board) OnBoard(nl NodeLoc) (ret bool) {
 }
 
 // GetMovDepth returns the current size of Board.movs
-//
 func (brd *Board) GetMovDepth() (ret int16) {
 	ret = int16(len(brd.movs))
 	return ret
 }
 
 // AddMove supports a variable sized array
-//
 func (abhr *AbstHier) AddMove(nl NodeLoc, color PointStatus, n uint16, ko NodeLoc) int {
 	ln := len(abhr.movs)
 	var newMove MoveRecord
@@ -550,7 +519,6 @@ func (abhr *AbstHier) AddMove(nl NodeLoc, color PointStatus, n uint16, ko NodeLo
 // SetPoint is used ONLY by test_ahgo.go,
 // in setting up test boards for testing trans.go, etc.
 // TODO: change test_ahgo.go so SetPoint is not needed...
-//
 func (abhr *AbstHier) SetPoint(nl NodeLoc, color PointStatus) (err ErrorList) {
 	if abhr.OnBoard(nl) {
 		abhr.Graphs[PointLevel].Nodes[nl].SetNodeLowState(uint16(color))
@@ -564,7 +532,6 @@ func (abhr *AbstHier) SetPoint(nl NodeLoc, color PointStatus) (err ErrorList) {
 }
 
 // NumLiberties returns the number of vacant points adjacent to a point
-//
 func (abhr *AbstHier) NumLiberties(nl NodeLoc) int {
 	nLibs := 0
 	g := &abhr.Graphs[PointLevel]
@@ -582,7 +549,6 @@ func (abhr *AbstHier) NumLiberties(nl NodeLoc) int {
 const RulesAllowSuicide bool = false // TODO: make this a function of Rules being used
 
 // UndoBoardMove is used to move up the game tree.
-//
 func (abhr *AbstHier) UndoBoardMove(doPlay bool) {
 	defer un(trace("UndoBoardMove", PointLevel, NilNodeLoc, 0, NilNodeLoc, nilArc, 0))
 	movIdx := len(abhr.movs) - 1
@@ -639,7 +605,6 @@ func (abhr *AbstHier) UndoBoardMove(doPlay bool) {
 
 // DoBoardMove is used by the SGF parser (sgf: W, B, etc.)
 // also used by AddTeachingPattern and other funtions that re-walk the SGF tree.
-//
 func (abhr *AbstHier) DoBoardMove(nl NodeLoc, color PointStatus, doPlay bool) (moveNum int, err ErrorList) {
 	defer un(trace("DoBoardMove", PointLevel, nl, 0, NilNodeLoc, nilArc, NodeStatus(color)))
 	var nextKoPoint, firstCapture NodeLoc = NilNodeLoc, NilNodeLoc
@@ -843,38 +808,32 @@ func (abhr *AbstHier) DoBoardMove(nl NodeLoc, color PointStatus, doPlay bool) (m
 }
 
 // GetSize returns the column and row sizes of the Board
-//
 func (abhr *AbstHier) GetSize() (ColValue, RowValue) {
 	return abhr.colSize, abhr.rowSize
 }
 
 // SetHandicap sets the handicap on the Board
 // Note: AB must be used to add the handicap stones.
-//
 func (brd *Board) SetHandicap(n int) {
 	brd.handi = uint8(n)
 }
 
 // GetHandicap returns the handicap set for the Board.
-//
 func (brd *Board) GetHandicap() int {
 	return int(brd.handi)
 }
 
 // SetKomi sets the komi for the Board.
-//
 func (brd *Board) SetKomi(k float32) {
 	brd.komi = k
 }
 
 // GetKomi returns the komi set for the Board.
-//
 func (brd *Board) GetKomi() float32 {
 	return brd.komi
 }
 
 // SetMov1 sets the player who moves first.
-//
 func (brd *Board) SetMov1(c PointStatus) {
 	if brd.mov1Set == false {
 		brd.mov1Set = true
@@ -883,13 +842,11 @@ func (brd *Board) SetMov1(c PointStatus) {
 }
 
 // GetMov1 returns the player who moves first.
-//
 func (brd *Board) GetMov1() (PointStatus, bool) {
 	return brd.mov1, brd.mov1Set
 }
 
 // SearchStack is type of value returned by Depth First Search.
-//
 type SearchStack struct {
 	nods  []NodeLoc
 	g     *Graph
@@ -898,7 +855,6 @@ type SearchStack struct {
 }
 
 // PushAndMark pushs a node on the search stack, and marks it
-//
 func (stk *SearchStack) PushAndMark(nl NodeLoc) *SearchStack {
 	defer un(trace("PushAndMark", stk.g.gLevel, nl, 0, NilNodeLoc, nilArc, 0xFFFF))
 	if !stk.g.Nodes[nl].IsBFSMarked() {
@@ -931,7 +887,6 @@ func (stk *SearchStack) PushAndMark(nl NodeLoc) *SearchStack {
 }
 
 // UnMarkNodes clears the BFSMark on the nodes in SearchStack
-//
 func (stk *SearchStack) UnMarkNodes() {
 	for _, nl := range stk.nods {
 		stk.g.Nodes[nl].ClearBFSMark()
@@ -939,12 +894,10 @@ func (stk *SearchStack) UnMarkNodes() {
 }
 
 // types for iteration and search functions
-//
 type GraphNodeLocFunc func(*Graph, NodeLoc)
 type NodeLocFuncBool func(NodeLoc) bool
 
 // EachNode visits all the graph Nodes.
-//
 func (abhr *AbstHier) EachNode(gl GraphLevel, Visit GraphNodeLocFunc) {
 	if gl == PointLevel {
 		var c ColValue
@@ -966,7 +919,6 @@ func (abhr *AbstHier) EachNode(gl GraphLevel, Visit GraphNodeLocFunc) {
 }
 
 // EachAdjNode visits each node connected to a given node.
-//
 func (abhr *AbstHier) EachAdjNode(gl GraphLevel, nl NodeLoc, Visit NodeLocFunc) {
 	g := &abhr.Graphs[gl]
 	if gl == PointLevel {
@@ -1013,7 +965,6 @@ func (abhr *AbstHier) EachAdjNode(gl GraphLevel, nl NodeLoc, Visit NodeLocFunc) 
 
 // BreadthFirstSearch performs Breadth First Search on a Board starting from a given point.
 // To target of the BreadthFirstSearch is encapsulated in a parametric function.
-//
 func (abhr *AbstHier) BreadthFirstSearch(gl GraphLevel, startNl NodeLoc, IsTarget NodeLocFuncBool) *SearchStack {
 	defer un(trace("BreadthFirstSearch", gl, startNl, 0, NilNodeLoc, nilArc, 0xFFFF))
 	srchStk := new(SearchStack)

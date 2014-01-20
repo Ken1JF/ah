@@ -26,7 +26,6 @@ const MAX_ARC_LIST = 500
 // 0 cannot be used, because it is C,R = 0,0
 // TODO: only needs to be 10 bits.
 // Can use 4 or 6 upper bits for other purposes...
-//
 const NilNodeLoc NodeLoc = 0xFFFF
 
 type GraphMark uint8
@@ -38,7 +37,6 @@ const (
 )
 
 // GraphNode is the node type for Strings, Groups, Areas, etc.
-//
 type GraphNode struct {
 	// base node fields, common to all Graphs: Points, Strings, and higher
 	highState uint16
@@ -54,67 +52,56 @@ type GraphNode struct {
 }
 
 // Accessor functions: if needed, i.e. outside ah package
-//
 func (gn *GraphNode) SetNodeLowState(ns uint16) {
 	gn.lowState = ns
 }
 
 // GetNodeLowState returns the lowState
-//
 func (gn *GraphNode) GetNodeLowState() uint16 {
 	return gn.lowState
 }
 
 // IsBFSMarked returns true if the BFSMark bit is set
-//
 func (gn *GraphNode) IsBFSMarked() bool {
 	return (gn.mark & BFSMark) > 0
 }
 
 // MarkBFSNode sets the BFSMark bit
-//
 func (gn *GraphNode) MarkBFSNode() {
 	gn.mark |= BFSMark
 }
 
 // ClearBFSMark clears the BFSMark bit
-//
 func (gn *GraphNode) ClearBFSMark() {
 	gn.mark &^= BFSMark
 }
 
 // IsCRMarked returns true if the CRMark bit is set
-//
 func (gn *GraphNode) IsCRMarked() bool {
 	return (gn.mark & CRMark) > 0
 }
 
 // MarkCRNode sets the CRMark bit
-//
 func (gn *GraphNode) MarkCRNode() {
 	gn.mark |= CRMark
 }
 
 // ClearCRMark clears the CRMark bit
-//
 func (gn *GraphNode) ClearCRMark() {
 	gn.mark &^= CRMark
 }
 
 // SetNodeHighState set the highState field
-//
 func (gn *GraphNode) SetNodeHighState(ns uint16) {
 	gn.highState = ns
 }
 
 // GetNodeHighState return the highState field
-//
 func (gn *GraphNode) GetNodeHighState() uint16 {
 	return gn.highState
 }
 
 // GraphArc is the arc type for connecting two Nodes.
-//
 type GraphArc struct {
 	fromNode   NodeLoc
 	toNode     NodeLoc
@@ -126,14 +113,12 @@ type GraphArc struct {
 type CompStateFunc func(*AbstHier, GraphLevel, NodeLoc, uint16) uint16
 
 // ChangeRequest is the type for registering objects to check for changes
-//
 type ChangeRequest struct {
 	chgNL  NodeLoc
 	chgLev GraphLevel
 }
 
 // RequestChange records the request to check for a change:
-//
 func (g *Graph) RequestChange(nl NodeLoc, adjNL NodeLoc) {
 	var memNL NodeLoc
 	switch g.gLevel {
@@ -161,7 +146,6 @@ func (g *Graph) RequestChange(nl NodeLoc, adjNL NodeLoc) {
 }
 
 // Graph is the type for levels of a Go Abstraction Hierarchy
-//
 type Graph struct {
 	// storage for Nodes and arcs
 	// exported temporarily for test_ahgo.go
@@ -185,7 +169,6 @@ type Graph struct {
 }
 
 // initGraph must be called before a graph can be used
-//
 func (g *Graph) initGraph(gl GraphLevel, cHi CompStateFunc, cNw CompStateFunc, udef NodeStatus) {
 	g.CompHigh = cHi
 	g.compNew = cNw
@@ -196,7 +179,6 @@ func (g *Graph) initGraph(gl GraphLevel, cHi CompStateFunc, cNw CompStateFunc, u
 }
 
 // clearGraph is called when a graph is being reset, e.g. board change size
-//
 func (g *Graph) clearGraph(gl GraphLevel, cHi CompStateFunc, cNw CompStateFunc, udef NodeStatus) {
 	g.gLevel = gl
 	g.CompHigh = cHi
@@ -214,7 +196,6 @@ func (g *Graph) clearGraph(gl GraphLevel, cHi CompStateFunc, cNw CompStateFunc, 
 // initBoardPoints() must be called before using a Board.
 // currently called by setSize().
 // initBoardPoints sets the static point type in inList
-//
 func (brd *Graph) initBoardPoints(colSize ColValue, rowSize RowValue) {
 	var c ColValue
 	var r RowValue
@@ -364,7 +345,6 @@ func (brd *Graph) initBoardPoints(colSize ColValue, rowSize RowValue) {
 
 // AddGraphNode uses a variable sized array of GraphNodes,
 // together with the freeNodes list of deleted Nodes.
-//
 func (g *Graph) AddGraphNode(ns uint16) (newN NodeLoc) {
 	if g.freeNodes == NilNodeLoc {
 		var newNode GraphNode
@@ -403,7 +383,6 @@ func (g *Graph) AddGraphNode(ns uint16) (newN NodeLoc) {
 
 // AddEdge uses a variable sized array of GraphArc,
 // and the freeArcs list of deleted edges
-//
 func (g *Graph) AddEdge(n1 NodeLoc, n2 NodeLoc) ([]GraphArc, ArcIdx) {
 	var newA ArcIdx = nilArc
 	if TraceAH {
@@ -459,16 +438,13 @@ func (g *Graph) AddEdge(n1 NodeLoc, n2 NodeLoc) ([]GraphArc, ArcIdx) {
 }
 
 // NodeLocFunc is the type of functions for EachAdjNode
-//
 type NodeLocFunc func(NodeLoc)
 
 // ArcFunc is the type of functions for EachIncidentArc.
 // TODO: consider adding a parameter indicating the arc direction?
-//
 type ArcFunc func(ArcIdx)
 
 // EachIncidentArc visits each arc connected to a given node.
-//
 func (g *Graph) EachIncidentArc(n NodeLoc, visit ArcFunc) {
 	a := g.Nodes[n].inList
 	for a != nilArc {
@@ -484,7 +460,6 @@ func (g *Graph) EachIncidentArc(n NodeLoc, visit ArcFunc) {
 
 // FindEdge finds an edge (undirected arc) between two Nodes.
 // edges are created with fromNode < toNode
-//
 func (g *Graph) FindEdge(frN NodeLoc, toN NodeLoc) ArcIdx {
 	if TraceAH {
 		//		fmt.Println("Finding: Level", g.gLevel, "NodeLoc", frN,
@@ -537,7 +512,6 @@ func (g *Graph) FindEdge(frN NodeLoc, toN NodeLoc) ArcIdx {
 // DeleteEdge deletes and edge from the graph,
 // and puts it on the freeArcs list.
 // The freeArcs list is linked by the inNext field.
-//
 func (g *Graph) DeleteEdge(frN NodeLoc, toN NodeLoc) {
 	if frN > toN { // reverse to assure fromNode < toNode
 		frN, toN = toN, frN
@@ -590,7 +564,6 @@ func (g *Graph) DeleteEdge(frN NodeLoc, toN NodeLoc) {
 // DeleteNode deletes an isolated node from the graph,
 // and puts it on the freeNodes list.
 // The freeNodes list is linked by the memberOf field.
-//
 func (g *Graph) DeleteNode(n NodeLoc) {
 	if g.Nodes[n].inList != nilArc {
 		FatalAbstHierError("DeleteNode: inList not empty")
@@ -608,7 +581,6 @@ func (g *Graph) DeleteNode(n NodeLoc) {
 }
 
 // GetPoint returns a pointer to the BoardPoint at [c][r]
-//
 func (gph *Graph) GetPoint(c ColValue, r RowValue) *GraphNode {
 	// TODO: add a check for brd.OnBoard(c, r) ?
 	// or assure that GetPoint is only called from context where c and r are valid ?

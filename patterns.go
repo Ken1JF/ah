@@ -13,7 +13,6 @@ package ah
 type PatternType uint8
 
 // Define the types of patterns on a Board:
-//
 const (
 	UNKN_PATTERN PatternType = iota
 	WHOLE_BOARD_PATTERN
@@ -24,7 +23,6 @@ const (
 )
 
 // names for printing:
-//
 var PatternNames = [6]string{
 	"Unknown PatternType",
 	"Whole_Board",
@@ -37,7 +35,6 @@ var PatternNames = [6]string{
 type PointSymmetry uint8
 
 // Define the types of symmetry of each point:
-//
 const (
 	UNKN_SYMMETRY        PointSymmetry = iota
 	CENTER_SYMMETRY                    // Center point of odd sized square board, all eight transformations leave point unchanged
@@ -86,14 +83,12 @@ var TransPreservesHandicapPattern = [6][8]bool{
 }
 
 // GetPointSymmetry returns the symmetry of a point:
-//
 //func (abhr *AbstHier) GetPointSymmetry(nl NodeLoc) (PointSymmetry) {
 //	ncols, nrows := abhr.GetSize()
 //	col, row := GetColRow(nl)
 //}
 
 // IsCanonical tests if a point is in the 1/8 th of the board with lowest coordinates:
-//
 func (abhr *AbstHier) IsCanonical(nl NodeLoc, hs HandicapSymmetry) (ret bool) {
 	ncols, nrows := abhr.GetSize()
 	midRow := (nrows - 1) / 2
@@ -120,7 +115,6 @@ func (abhr *AbstHier) IsCanonical(nl NodeLoc, hs HandicapSymmetry) (ret bool) {
 
 // FindCanonicalRep returns the Canonical point and the first transformation
 // that takes a point into its canonical representation
-//
 func (abhr *AbstHier) FindCanonicalRep(nl NodeLoc, hs HandicapSymmetry) (nlc NodeLoc, trans BoardTrans) {
 	for trans := T_FIRST; trans <= T_LAST; trans += 1 {
 		if TransPreservesHandicapPattern[hs][trans] {

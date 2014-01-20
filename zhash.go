@@ -55,7 +55,6 @@ func newZobristKey() ZobristCode {
 }
 
 // Initialize the Zobrist Keys
-//
 func init() {
 	checkKeys = make(map[ZobristCode]int64, checkKeysNeeded)
 	ZSeed = (2 * 3 * 5 * 7 * 11) - 1

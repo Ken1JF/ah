@@ -13,7 +13,6 @@ package ah
 type BoardTrans uint8
 
 // Define the eight symmetric transformations of an N by N board:
-//
 const (
 	T_IDENTITY BoardTrans = iota // Identity (Zero) transformation
 	T_ROTA_090                   // Rotate  90 degrees counter-clockwise
@@ -26,7 +25,6 @@ const (
 )
 
 // constants for iteration:
-//
 const (
 	T_FIRST   BoardTrans = T_IDENTITY
 	T_LAST    BoardTrans = T_FLP_HORI
@@ -34,7 +32,6 @@ const (
 )
 
 // name for printing:
-//
 var TransName = [8]string{
 	"T_IDENTITY",
 	"T_ROTA_090",
@@ -47,7 +44,6 @@ var TransName = [8]string{
 }
 
 // inverse transformations:
-//
 var InverseTrans = [8]BoardTrans{
 	T_IDENTITY, // T_IDENTITY inverse
 	T_ROTA_270, // T_ROTA_090 inverse
@@ -62,7 +58,6 @@ var InverseTrans = [8]BoardTrans{
 // define the result of composing two board transformations:
 // board_trans_compose[A][B] is result of applying A, then B.
 // Note: composition is not commutative	for all transforms.
-//
 var ComposeTrans = [8][8]BoardTrans{
 	//									T_IDENTITY	T_ROTA_090	T_ROTA_180	T_ROTA_270	T_FLP_SLAS	T_FLP_VERT	T_FLP_BACK	T_FLP_HORI
 	//									---------- 	----------	----------	----------	----------	----------	----------	----------

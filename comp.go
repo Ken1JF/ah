@@ -86,16 +86,16 @@ func computeStringHighState(abhr *AbstHier, gl GraphLevel, n NodeLoc, newLoSt ui
 // or a count/pattern of the stones adjacent to an unoccupied point.
 // Liberty points are made unique, by shifting the Col and Row values
 // into the upper 11 bits, leaving 5 bits for "raw" PointStatus values.
-//
 type PointStatus uint16
 
 // Color and Liberty values
-//
 const (
 	// Undefined, used by ChangeNodeState, as a temporary value
+
 	UndefinedPointStatus PointStatus = iota
 
 	// Occupied, stone color
+
 	Black
 	White
 
@@ -149,7 +149,6 @@ const (
 )
 
 // String() string function for fmt.Printf
-//
 func (ptst PointStatus) String() string {
 	switch ptst {
 	case UndefinedPointStatus:
@@ -435,25 +434,21 @@ const (
 )
 
 // GetRawPointStatus removes Col and Row bits
-//
 func GetRawPointStatus(pst PointStatus) PointStatus {
 	return (pst & RawStatusMask)
 }
 
 // IsOccupied returns true if PointStatus is Black or White
-//
 func IsOccupied(c PointStatus) bool {
 	return (c == Black) || (c == White)
 }
 
 // IsLiberty returns true if PointStatus is > B0W0
-//
 func IsLiberty(c PointStatus) bool {
 	return c > B0W0
 }
 
 // CurrentColor returns the color of the point after this move is made.
-//
 func CurrentColor(mTyp PointStatus) (ret PointStatus) {
 	if mTyp == Black {
 		ret = Black
@@ -475,7 +470,6 @@ func CurrentColor(mTyp PointStatus) (ret PointStatus) {
 }
 
 // PreviousColor returns the color of the point before the move was made.
-//
 func PreviousColor(mTyp PointStatus) (ret PointStatus) {
 	if mTyp == Black {
 		ret = Unocc
@@ -498,7 +492,6 @@ func PreviousColor(mTyp PointStatus) (ret PointStatus) {
 
 // OppositeColor returns the opposite color for Black and White.
 // For other values, the generic Unocc is returned.
-//
 func OppositeColor(c PointStatus) (ret PointStatus) {
 	if c == Black {
 		ret = White
@@ -511,7 +504,6 @@ func OppositeColor(c PointStatus) (ret PointStatus) {
 }
 
 // InitAbstHier must be called before a abstraction hierarchy can be used
-//
 func (abhr *AbstHier) InitAbstHier(c ColValue, r RowValue, upLev GraphLevel, doPlay bool) *AbstHier {
 	defer un(trace("InitAbstHier", 0, NilNodeLoc, 0, NilNodeLoc, nilArc, 0xFFFF))
 	// turn off tracing during InitAbstHi
