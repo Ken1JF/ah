@@ -407,7 +407,7 @@ func (g *Graph) AddGraphNode(ns uint16) (newN NodeLoc) {
 func (g *Graph) AddEdge(n1 NodeLoc, n2 NodeLoc) ([]GraphArc, ArcIdx) {
 	var newA ArcIdx = nilArc
 	if TraceAH {
-		fmt.Println(" Adding Edge: Level", g.gLevel, "NodeLoc", n1, "NodeLoc2", n2)
+		fmt.Println("Adding Edge: Level", g.gLevel, "NodeLoc", n1, "NodeLoc2", n2)
 	}
 	if n1 > n2 {
 		n1, n2 = n2, n1
@@ -423,7 +423,7 @@ func (g *Graph) AddEdge(n1 NodeLoc, n2 NodeLoc) ([]GraphArc, ArcIdx) {
 						newSz = 16
 					}
 					if TraceAH {
-						fmt.Println("  Reallocating arcs: ", newSz)
+						fmt.Println("Reallocating arcs: ", newSz)
 					}
 					newA := make([]GraphArc, newSz)
 					for i, curA := range g.arcs {
@@ -432,21 +432,21 @@ func (g *Graph) AddEdge(n1 NodeLoc, n2 NodeLoc) ([]GraphArc, ArcIdx) {
 					g.arcs = newA
 				}
 				if TraceAH {
-		//			fmt.Println("  Extending arcs: ", ln+1)
+		//			fmt.Println("Extending arcs: ", ln+1)
 				}
 				g.arcs = g.arcs[0: ln+1]
 		*/
 		newA = ArcIdx(ln)
 	} else {
 		if TraceAH {
-			//			fmt.Println("  Reusing freeArcs: ", g.freeArcs)
+			//			fmt.Println("Reusing freeArcs: ", g.freeArcs)
 		}
 		newA = g.freeArcs
 		g.freeArcs = g.arcs[newA].inNext
 		g.arcs[newA].inNext = nilArc // TODO: should not need?
 	}
 	if TraceAH {
-		fmt.Println("  Added:", newA)
+		fmt.Println("Added:", newA)
 	}
 	g.arcs[newA].fromNode = n1
 	g.arcs[newA].toNode = n2
@@ -487,13 +487,15 @@ func (g *Graph) EachIncidentArc(n NodeLoc, visit ArcFunc) {
 //
 func (g *Graph) FindEdge(frN NodeLoc, toN NodeLoc) ArcIdx {
 	if TraceAH {
-		//		fmt.Println(" Finding: Level", g.gLevel, "NodeLoc", frN, "NodeLoc2", toN)
+		//		fmt.Println("Finding: Level", g.gLevel, "NodeLoc", frN, 
+        //          "NodeLoc2", toN)
 	}
 	ret := nilArc
 	if frN > toN { // reverse to assure fromNode < toNode
 		frN, toN = toN, frN
 		if TraceAH {
-			//			fmt.Println(" Swapped: Level", g.gLevel, "NodeLoc", frN, "NodeLoc2", toN)
+			//			fmt.Println("Swapped: Level", g.gLevel, "NodeLoc", frN, 
+            //              "NodeLoc2", toN)
 		}
 	}
 	aIn := g.Nodes[toN].inList
@@ -512,7 +514,7 @@ func (g *Graph) FindEdge(frN NodeLoc, toN NodeLoc) ArcIdx {
 			}
 			count++
 			if count > MAX_ARC_LIST {
-				fmt.Println(" loop in arc list, aIn:", aIn,
+				fmt.Println("loop in arc list, aIn:", aIn,
 					"frN:", g.arcs[aIn].fromNode,
 					"toN:", g.arcs[aIn].toNode)
 				if firstLoopArc == nilArc {
@@ -527,7 +529,7 @@ func (g *Graph) FindEdge(frN NodeLoc, toN NodeLoc) ArcIdx {
 		}
 	}
 	if TraceAH {
-		fmt.Println(" Found: ", ret)
+		fmt.Println("Found: ", ret)
 	}
 	return ret
 }

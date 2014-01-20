@@ -105,7 +105,7 @@ func ExamplePointType() {
             //      fmt.Println("UninitializedPt:", pt)
             
             default:
-                //				fmt.Println(" skipping:", pt)
+                //				fmt.Println("skipping:", pt)
 		}
 	}
     // Output:
@@ -164,7 +164,7 @@ func ExamplePointStatus() {
 			fmt.Println(ps, int(ps))
             
             default:
-                //				fmt.Println(" skipping:", ps)
+                //				fmt.Println("skipping:", ps)
 		}
 	}
     // Output:

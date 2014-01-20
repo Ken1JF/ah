@@ -74,7 +74,7 @@ func init() {
 }
 
 func PrintZKeys() {
-	fmt.Println("ZSeed = ", ZSeed)
+	fmt.Println("ZSeed =", ZSeed)
 	var i, j uint8
 	fmt.Println("BlackZKey = ")
 	for i = 0; i < MaxBoardSize; i += 1 {
@@ -83,20 +83,20 @@ func PrintZKeys() {
 		}
 		fmt.Println()
 	}
-	fmt.Println("WhiteZKey = ")
+	fmt.Println("WhiteZKey =")
 	for i = 0; i < MaxBoardSize; i += 1 {
 		for j = 0; j < MaxBoardSize; j += 1 {
 			fmt.Print(WhiteZKey[i][j], ",")
 		}
 		fmt.Println()
 	}
-	fmt.Println("KoZKey = ")
+	fmt.Println("KoZKey =")
 	for i = 0; i < MaxBoardSize; i += 1 {
 		for j = 0; j < MaxBoardSize; j += 1 {
 			fmt.Print(KoZKey[i][j], ",")
 		}
 		fmt.Println()
 	}
-	//	fmt.Println("BlackToPlayZKey = ", BlackToPlayZKey)
-	fmt.Println("WhiteToPlayZKey = ", WhiteToPlayZKey)
+	//	fmt.Println("BlackToPlayZKey =", BlackToPlayZKey)
+	fmt.Println("WhiteToPlayZKey =", WhiteToPlayZKey)
 }

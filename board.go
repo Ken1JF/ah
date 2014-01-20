@@ -379,7 +379,7 @@ func (mv *MoveRecord) PrintMove(idx int) {
 		fmt.Print("Move: ")
 	}
     fmt.Printf("%s", mv.String())
-	fmt.Println(" ")
+	fmt.Println()
 }
 
 const nilMovNum int16 = -1
@@ -1040,7 +1040,7 @@ func (abhr *AbstHier) BreadthFirstSearch(gl GraphLevel, startNl NodeLoc, IsTarge
 					if g.Nodes[adjNl].IsBFSMarked() == false {
 						if g.Nodes[adjNl].memberOf == lookingFor {
 							if TraceAH {
-								fmt.Println("  Found: ", lookingFor)
+								fmt.Println(" Found:", lookingFor)
 							}
 							srchStk = srchStk.PushAndMark(adjNl)
 						}

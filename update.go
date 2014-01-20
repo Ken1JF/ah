@@ -142,9 +142,9 @@ func (abhr *AbstHier) GetNodeCounts(gl GraphLevel) (b_nodes int, b_members int, 
 	abhr.EachNode(gl, CountNode)
 	u_nodes = count
 	u_members = memCount
-	//	fmt.Println("Black nodes = ", b_nodes, " Black members = ", b_members);
-	//	fmt.Println("White nodes = ", w_nodes, " White members = ", w_members);
-	//	fmt.Println("Unocc nodes = ", u_nodes, " Unocc members = ", u_members);
+	//	fmt.Println("Black nodes =", b_nodes, "Black members =", b_members);
+	//	fmt.Println("White nodes =", w_nodes, "White members =", w_members);
+	//	fmt.Println("Unocc nodes =", u_nodes, "Unocc members =", u_members);
 
 	return
 }
@@ -161,14 +161,11 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 		if (g.Nodes[nl].lowState == color) || ((PointStatus(color) == Unocc) && (g.Nodes[nl].lowState != uint16(Black)) && (g.Nodes[nl].lowState != uint16(White))) {
 			count += 1
 			fmt.Print(nl)
-			fmt.Print(": ", g.Nodes[nl].lowState)
-			fmt.Print(",", g.Nodes[nl].highState)
 			abhr.EachMember(gl, nl,
 				func(memN1 NodeLoc) {
 					thisMemCount += 1
 				})
-			fmt.Print(" ", thisMemCount)
-			fmt.Print("-mem: ")
+			fmt.Print(":", g.Nodes[nl].lowState, ",", g.Nodes[nl].highState, thisMemCount, "-mem:")
 			var lo1, hi1 uint16
 			loG := &abhr.Graphs[gl-1]
 			abhr.EachMember(gl, nl,
@@ -190,9 +187,9 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 						lo1 = lo
 						hi1 = hi
 					}
-					fmt.Print(", ")
+					fmt.Print(",")
 				})
-			fmt.Print(" adj: ")
+			fmt.Print("adj:")
 			g.EachIncidentArc(nl,
 				func(a ArcIdx) {
 					fNod := g.arcs[a].fromNode
@@ -202,7 +199,7 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 						fmt.Print(fNod)
 					}
 					fmt.Print("(", g.arcs[a].imageCount)
-					fmt.Print("), ")
+					fmt.Print("),")
 				})
 			fmt.Println()
 		}
@@ -211,14 +208,14 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 	color = uint16(Black)
 	memCount = 0
 	abhr.EachNode(gl, PrintNode)
-	fmt.Println(" Total ", count, " nodes, with ", memCount, " members")
+	fmt.Println("Total", count, "nodes, with", memCount, "members")
 
 	count = 0
 	memCount = 0
 	fmt.Println("White nodes")
 	color = uint16(White)
 	abhr.EachNode(gl, PrintNode)
-	fmt.Println(" Total ", count, " nodes, with ", memCount, " members")
+	fmt.Println("Total", count, "nodes, with", memCount, "members")
 
 	if printUnocc {
 		count = 0
@@ -226,7 +223,7 @@ func (abhr *AbstHier) PrintGraph(gl GraphLevel, printUnocc bool) {
 		fmt.Println("Unocc nodes")
 		color = uint16(Unocc)
 		abhr.EachNode(gl, PrintNode)
-		fmt.Println(" Total ", count, " nodes, with ", memCount, " members")
+		fmt.Println("Total", count, "nodes, with", memCount, "members")
 	}
 }
 
@@ -255,9 +252,9 @@ func (abhr *AbstHier) PrintAbstHier(str string, printUnocc bool) {
 		(new_white_nodes != abhr.white_nodes) || (new_white_members != abhr.white_members) ||
 		(new_unocc_nodes != abhr.unocc_nodes) || (new_unocc_members != abhr.unocc_members) {
 		var lev GraphLevel
-		fmt.Println("Abstraction Hierarchy: ", str)
+		fmt.Println("Abstraction Hierarchy:", str)
 		for lev = StringLevel; lev <= abhr.updtLev; lev++ {
-			fmt.Println("  Level", lev)
+			fmt.Println("Level", lev)
 			abhr.PrintGraph(lev, printUnocc)
 		}
 		for i, m := range abhr.movs {
@@ -663,7 +660,7 @@ func (abhr *AbstHier) CheckSplit(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret Nod
 				return (inNL == targN)
 			})
 		if TraceAH {
-			fmt.Println(" After BreadthFirstSearch, found = ", spltStk.found)
+			fmt.Println("After BreadthFirstSearch, found =", spltStk.found)
 		}
 		return spltStk.found
 	}
@@ -680,18 +677,18 @@ func (abhr *AbstHier) CheckSplit(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret Nod
 			abhr.ChangeNodeState(gl, n, g.undefStatus, false)
 		}
 		if TraceAH {
-			fmt.Println(" finished set Undefined, set to saveState, len spltStk.nods = ", len(spltStk.nods))
+			fmt.Println("finished set Undefined, set to saveState, len spltStk.nods =", len(spltStk.nods))
 		}
 		// set the split Nodes back to saveState
 		// for _,nn := range spltStk.nods {
 		for _, nn := range spltStk.nods {
 			if TraceAH {
-				PrintNodeLoc(gl, nn, " computing the high value for node: ")
-				fmt.Println("    nn = ", nn, " saveSt = ", saveSt)
+				PrintNodeLoc(gl, nn, "computing the high value for node:")
+				fmt.Println("nn =", nn, "saveSt =", saveSt)
 			}
 			if TraceAH {
-				PrintNodeLoc(gl, nn, " Setting back to saveSt: ")
-				fmt.Println(" lowState: ", saveSt)
+				PrintNodeLoc(gl, nn, "Setting back to saveSt:")
+				fmt.Println("lowState:", saveSt)
 			}
 			g.Nodes[nn].lowState = saveSt
 			g.Nodes[nn].highState = saveSt
@@ -704,7 +701,7 @@ func (abhr *AbstHier) CheckSplit(gl GraphLevel, n1 NodeLoc, n2 NodeLoc) (ret Nod
 			}
 		}
 		if TraceAH {
-			fmt.Println(" finished set set to saveState, len spltStk.nods = ", len(spltStk.nods))
+			fmt.Println("finished set set to saveState, len spltStk.nods =", len(spltStk.nods))
 		}
 		// For the above to work, make sure coloring functions satisfy the following:
 		//	1. Each level has an "Undefined" state (say 0)
@@ -791,7 +788,7 @@ func (abhr *AbstHier) DeleteArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLo
 func (abhr *AbstHier) ChangeNodeState(gl GraphLevel, chgNod NodeLoc, newState NodeStatus, doMrgSplt bool) {
 	defer un(trace("ChangeNodeState", gl, chgNod, 0, NilNodeLoc, nilArc, newState))
 	if TraceAH {
-		fmt.Println(" Move: ", abhr.numMoves)
+		fmt.Println("Move:", abhr.numMoves)
 	}
 	g := &abhr.Graphs[gl]
 	// save the original State
@@ -882,7 +879,7 @@ func (abhr *AbstHier) AddArcHigh(gl GraphLevel, chgNod NodeLoc, adjNod NodeLoc) 
 			}
 		} else {
 			if TraceAH {
-				fmt.Println(" Incrementing: ", highA)
+				fmt.Println("Incrementing:", highA)
 			}
 			hiG.arcs[highA].imageCount += 1
 		}
