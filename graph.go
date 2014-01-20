@@ -417,24 +417,24 @@ func (g *Graph) AddEdge(n1 NodeLoc, n2 NodeLoc) ([]GraphArc, ArcIdx) {
 		ln := len(g.arcs)
 		g.arcs = append(g.arcs, newArc)
 		/*
-				if ln == cap(g.arcs) { // reallocate
-					newSz := (ln + 1) * 2
-					if newSz < 16 { // avoid small allocations
-						newSz = 16
+					if ln == cap(g.arcs) { // reallocate
+						newSz := (ln + 1) * 2
+						if newSz < 16 { // avoid small allocations
+							newSz = 16
+						}
+						if TraceAH {
+							fmt.Println("Reallocating arcs: ", newSz)
+						}
+						newA := make([]GraphArc, newSz)
+						for i, curA := range g.arcs {
+							newA[i] = curA
+						}
+						g.arcs = newA
 					}
 					if TraceAH {
-						fmt.Println("Reallocating arcs: ", newSz)
+			//			fmt.Println("Extending arcs: ", ln+1)
 					}
-					newA := make([]GraphArc, newSz)
-					for i, curA := range g.arcs {
-						newA[i] = curA
-					}
-					g.arcs = newA
-				}
-				if TraceAH {
-		//			fmt.Println("Extending arcs: ", ln+1)
-				}
-				g.arcs = g.arcs[0: ln+1]
+					g.arcs = g.arcs[0: ln+1]
 		*/
 		newA = ArcIdx(ln)
 	} else {
@@ -487,15 +487,15 @@ func (g *Graph) EachIncidentArc(n NodeLoc, visit ArcFunc) {
 //
 func (g *Graph) FindEdge(frN NodeLoc, toN NodeLoc) ArcIdx {
 	if TraceAH {
-		//		fmt.Println("Finding: Level", g.gLevel, "NodeLoc", frN, 
-        //          "NodeLoc2", toN)
+		//		fmt.Println("Finding: Level", g.gLevel, "NodeLoc", frN,
+		//          "NodeLoc2", toN)
 	}
 	ret := nilArc
 	if frN > toN { // reverse to assure fromNode < toNode
 		frN, toN = toN, frN
 		if TraceAH {
-			//			fmt.Println("Swapped: Level", g.gLevel, "NodeLoc", frN, 
-            //              "NodeLoc2", toN)
+			//			fmt.Println("Swapped: Level", g.gLevel, "NodeLoc", frN,
+			//              "NodeLoc2", toN)
 		}
 	}
 	aIn := g.Nodes[toN].inList

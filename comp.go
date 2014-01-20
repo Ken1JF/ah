@@ -13,7 +13,7 @@
 package ah
 
 import (
-        "fmt"
+	"fmt"
 )
 
 func computeNewAreaState(abhr *AbstHier, gl GraphLevel, n NodeLoc, newLoSt uint16) (ret uint16) {
@@ -151,92 +151,92 @@ const (
 // String() string function for fmt.Printf
 //
 func (ptst PointStatus) String() string {
-    switch ptst {
-        case UndefinedPointStatus:
-            return "UndefinedPointStatus"
-        case Black:
-            return "Black"
-        case White:
-            return "White"
-        
-            // Move types, for AB, AW, and AE properties:
-            // Note: the "no-op" moves: AB_B, AW_W, and AE_U are not supported.
-        
-        case AB_U:
-            return "AB_U"
-        case AB_W:
-            return "AB_W"
-        case AE_B:
-            return "AE_B"
-        case AE_W:
-            return "AE_W"
-        case AW_B:
-            return "AW_B"
-        case AW_U:
-            return "AW_U"
-        
-             // Unoccupied if PointStatus >= Unocc
-        
-        case Unocc:
-            return "Unocc"
-        
-        case B0W0:
-            return "B0W0"
-        
-             // Liberty if PointStatus > B0W0
-        
-             // Single Adjacent Stone:
-        case W1:
-            return "W1"
-        case B1:
-            return "B1"
-        
-            // Two Adjacent Stones:
-        case W2:
-            return "W2"
-        case B1W1:
-            return "B1W1"
-        case W1B1:
-            return "W1B1"
-        case B2:
-            return "B2"
-        
-            // Three Adjacent Stones:
-        case B3:
-            return "B3"
-        case B2W1:
-            return "B2W1"
-        case B1W2:
-            return "B1W2"
-        case W3:
-            return "W3"
-        case WBB:
-            return "WBB"
-        case WBW:
-            return "WBW"
-        case BWB:
-            return "BWB"
-        case W2B1:
-            return "W2B1"
-        
-            // Four Adjacent Stones:
-        case B4:
-            return "B4"
-        case B3W1:
-            return "B3W1"
-        case BWBW:
-            return "BWBW"
-        case BBWW:
-            return "BBWW"
-        case B1W3:
-            return "B1W3"
-        case W4:
-            return "W4"
-        
-        case LastPointStatus:
-            return "LastPointStatus"
-    }
-    return fmt.Sprintf("UnknownPointSatus: %d", int(ptst))
+	switch ptst {
+	case UndefinedPointStatus:
+		return "UndefinedPointStatus"
+	case Black:
+		return "Black"
+	case White:
+		return "White"
+
+		// Move types, for AB, AW, and AE properties:
+		// Note: the "no-op" moves: AB_B, AW_W, and AE_U are not supported.
+
+	case AB_U:
+		return "AB_U"
+	case AB_W:
+		return "AB_W"
+	case AE_B:
+		return "AE_B"
+	case AE_W:
+		return "AE_W"
+	case AW_B:
+		return "AW_B"
+	case AW_U:
+		return "AW_U"
+
+		// Unoccupied if PointStatus >= Unocc
+
+	case Unocc:
+		return "Unocc"
+
+	case B0W0:
+		return "B0W0"
+
+		// Liberty if PointStatus > B0W0
+
+		// Single Adjacent Stone:
+	case W1:
+		return "W1"
+	case B1:
+		return "B1"
+
+		// Two Adjacent Stones:
+	case W2:
+		return "W2"
+	case B1W1:
+		return "B1W1"
+	case W1B1:
+		return "W1B1"
+	case B2:
+		return "B2"
+
+		// Three Adjacent Stones:
+	case B3:
+		return "B3"
+	case B2W1:
+		return "B2W1"
+	case B1W2:
+		return "B1W2"
+	case W3:
+		return "W3"
+	case WBB:
+		return "WBB"
+	case WBW:
+		return "WBW"
+	case BWB:
+		return "BWB"
+	case W2B1:
+		return "W2B1"
+
+		// Four Adjacent Stones:
+	case B4:
+		return "B4"
+	case B3W1:
+		return "B3W1"
+	case BWBW:
+		return "BWBW"
+	case BBWW:
+		return "BBWW"
+	case B1W3:
+		return "B1W3"
+	case W4:
+		return "W4"
+
+	case LastPointStatus:
+		return "LastPointStatus"
+	}
+	return fmt.Sprintf("UnknownPointSatus: %d", int(ptst))
 }
 
 // no computeNewPointState, no new points

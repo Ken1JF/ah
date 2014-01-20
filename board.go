@@ -58,37 +58,37 @@ const (
 // define print values, for debugging
 //
 func (d Direction) String() string {
-    switch d {
-        case NoDir:
-            return "No Direction"
-        case UpperDir:
-            return "Upper Direction"
-        case LeftDir:
-            return "Left Direction"
-        case LowerDir:
-            return "Lower Direction"
-        case RightDir:
-            return "Right Direction"
-    }
-        // is it a compound direction:
-    if (int(d) > int(NoDir)) && (int(d) < int(RightDir)*2 ) {
-        str := ""
-        if (int(d) & int(UpperDir)) > 0 {
-            str = str + "Upper "
-        }
-        if (int(d) & int(LeftDir)) > 0 {
-            str = str + "Left "
-        }
-        if (int(d) & int(LowerDir)) > 0 {
-            str = str + "Lower "
-        }
-        if (int(d) & int(RightDir)) > 0 {
-            str = str + "Right "
-        }
-        return str + "Directions"
-    }
-        // Unknown direction
-    return fmt.Sprintf("Unknown Direction:%d", int(d))
+	switch d {
+	case NoDir:
+		return "No Direction"
+	case UpperDir:
+		return "Upper Direction"
+	case LeftDir:
+		return "Left Direction"
+	case LowerDir:
+		return "Lower Direction"
+	case RightDir:
+		return "Right Direction"
+	}
+	// is it a compound direction:
+	if (int(d) > int(NoDir)) && (int(d) < int(RightDir)*2) {
+		str := ""
+		if (int(d) & int(UpperDir)) > 0 {
+			str = str + "Upper "
+		}
+		if (int(d) & int(LeftDir)) > 0 {
+			str = str + "Left "
+		}
+		if (int(d) & int(LowerDir)) > 0 {
+			str = str + "Lower "
+		}
+		if (int(d) & int(RightDir)) > 0 {
+			str = str + "Right "
+		}
+		return str + "Directions"
+	}
+	// Unknown direction
+	return fmt.Sprintf("Unknown Direction:%d", int(d))
 }
 
 // PointType is a static classification of all board points
@@ -212,11 +212,11 @@ var PtTypeNames = [255]string{
 
 // provide a String() function so fmt.Printf can print
 //
-func (pt PointType) String()  string {
-    if (int(pt) >= int(SingletonPt)) && (int(pt) <+ int(Line_7_Pt)) {
-        return PtTypeNames[pt]        
-    }
-    return "¿"
+func (pt PointType) String() string {
+	if (int(pt) >= int(SingletonPt)) && (int(pt) <= int(Line_7_Pt)) {
+		return PtTypeNames[pt]
+	}
+	return "¿"
 }
 
 // ColValue and RowValue are types that represent column and row coordinates, respectively.
@@ -224,15 +224,15 @@ func (pt PointType) String()  string {
 //
 type ColValue uint8
 type RowValue uint8
- 
+
 // provide String() function for fmt.Printf
 //
 func (col ColValue) String() string {
-    colLabels := "ABCDEFGHJKLMNOPQRST"
-    if (col >= 0) && (uint8(col) < MaxBoardSize) {
-        return string(colLabels[col])
-    }
-    return "?"
+	colLabels := "ABCDEFGHJKLMNOPQRST"
+	if (col >= 0) && (uint8(col) < MaxBoardSize) {
+		return string(colLabels[col])
+	}
+	return "?"
 }
 
 // provide String() function for fmt.Printf
@@ -240,10 +240,10 @@ func (col ColValue) String() string {
 // for Board display, row+1 should be boardSize-row
 //
 func (row RowValue) String() string {
-    if (row >= 0) && (uint8(row) < MaxBoardSize) {
-        return fmt.Sprintf("%d", row+1)
-    }
-    return "?"
+	if (row >= 0) && (uint8(row) < MaxBoardSize) {
+		return fmt.Sprintf("%d", row+1)
+	}
+	return "?"
 }
 
 // TODO:(align) if alignment in 6g compiler is improved, go back to using this:
@@ -266,8 +266,8 @@ type NodeLocCR NodeLoc
 // String() function for fmt.Printf
 //
 func (nl NodeLocCR) String() string {
-    c,r := GetColRow(NodeLoc(nl))
-    return c.String() + r.String()
+	c, r := GetColRow(NodeLoc(nl))
+	return c.String() + r.String()
 }
 
 // string, group, and higher abstraction levels
@@ -277,7 +277,7 @@ type NodeLocIdx NodeLoc
 // String() function for fmt.Printf
 //
 func (nl NodeLocIdx) String() string {
-    return fmt.Sprintf("%d", int(nl))
+	return fmt.Sprintf("%d", int(nl))
 }
 
 // TODO:(align) if alignment in 6g compiler is improved, go back to using this:
@@ -353,9 +353,9 @@ type MoveRecord struct {
 // String() function for fmt.Printf
 //
 func (mv *MoveRecord) String() string {
-    var s string
+	var s string
 	c, r := GetColRow(mv.moveLoc)
-    s = fmt.Sprintf("Loc: %v%v, Type: %v, Num: %d, ", c, r, mv.moveType, mv.moveNum)
+	s = fmt.Sprintf("Loc: %v%v, Type: %v, Num: %d, ", c, r, mv.moveType, mv.moveNum)
 	if mv.capturedBy != nilMovNum {
 		s = fmt.Sprintf("%s CapdBy: %d", s, mv.capturedBy)
 	}
@@ -363,13 +363,13 @@ func (mv *MoveRecord) String() string {
 		s = fmt.Sprintf("%s NextCap: %d", s, mv.nextCapture)
 	}
 	if mv.firstCap != nilMovNum {
-		s = fmt.Sprintf("%s FirstCap: %d",s, mv.firstCap)
+		s = fmt.Sprintf("%s FirstCap: %d", s, mv.firstCap)
 	}
 	if mv.koPoint != NilNodeLoc {
-        c, r := GetColRow(mv.koPoint)
+		c, r := GetColRow(mv.koPoint)
 		s = fmt.Sprintf("%s Ko: %v%v", s, c, r)
 	}
-    return s
+	return s
 }
 
 func (mv *MoveRecord) PrintMove(idx int) {
@@ -378,7 +378,7 @@ func (mv *MoveRecord) PrintMove(idx int) {
 	} else {
 		fmt.Print("Move: ")
 	}
-    fmt.Printf("%s", mv.String())
+	fmt.Printf("%s", mv.String())
 	fmt.Println()
 }
 
