@@ -17,7 +17,6 @@
 package ah
 
 import (
-	"fmt"
 	"math/rand"
 )
 
@@ -40,13 +39,12 @@ const checkKeysNeeded int = 1085
 func newZobristKey() ZobristCode {
 	var nzc ZobristCode
 	var present bool
-	var n int64
 	present = true
 	for present {
 		nzc = ZobristCode((rand.Uint32() << 24) ^ (rand.Uint32() << 16) ^ (rand.Uint32() << 8) ^ rand.Uint32())
-		n, present = checkKeys[nzc]
+		_, present = checkKeys[nzc]
 		if present {
-			fmt.Println("Duplicate key", nzc, "from", n)
+			panic("Zobrist Duplicate Keys")
 		}
 	}
 	keyCount += 1
@@ -70,33 +68,4 @@ func init() {
 	}
 	//	BlackToPlayZKey = newZobristKey()
 	WhiteToPlayZKey = newZobristKey()
-	fmt.Println("keyCount =", keyCount)
-}
-
-func PrintZKeys() {
-	fmt.Println("ZSeed =", ZSeed)
-	var i, j uint8
-	fmt.Println("BlackZKey = ")
-	for i = 0; i < MaxBoardSize; i += 1 {
-		for j = 0; j < MaxBoardSize; j += 1 {
-			fmt.Print(BlackZKey[i][j], ",")
-		}
-		fmt.Println()
-	}
-	fmt.Println("WhiteZKey =")
-	for i = 0; i < MaxBoardSize; i += 1 {
-		for j = 0; j < MaxBoardSize; j += 1 {
-			fmt.Print(WhiteZKey[i][j], ",")
-		}
-		fmt.Println()
-	}
-	fmt.Println("KoZKey =")
-	for i = 0; i < MaxBoardSize; i += 1 {
-		for j = 0; j < MaxBoardSize; j += 1 {
-			fmt.Print(KoZKey[i][j], ",")
-		}
-		fmt.Println()
-	}
-	//	fmt.Println("BlackToPlayZKey =", BlackToPlayZKey)
-	fmt.Println("WhiteToPlayZKey =", WhiteToPlayZKey)
 }
