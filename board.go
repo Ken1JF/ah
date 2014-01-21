@@ -334,7 +334,7 @@ type MoveRecord struct {
 func (mv *MoveRecord) String() string {
 	var s string
 	c, r := GetColRow(mv.moveLoc)
-	s = fmt.Sprintf("Loc: %v%v, Type: %v, Num: %d, ", c, r, mv.moveType, mv.moveNum)
+	s = fmt.Sprintf("Loc: %v%v, Type: %v, Num: %d,", c, r, mv.moveType, mv.moveNum)
 	if mv.capturedBy != nilMovNum {
 		s = fmt.Sprintf("%s CapdBy: %d", s, mv.capturedBy)
 	}
