@@ -228,14 +228,18 @@ func (col ColValue) String() string {
 }
 
 // provide String() function for fmt.Printf
-// NOTE: this is for debugging, mainly
-// for Board display, row+1 should be boardSize-row
+// Note: the reversing of rows, so row 19 is the top, and row 1 is the bottom
+// is only done at the GUI level, when displaying the board for play.
 func (row RowValue) String() string {
 	if (row >= 0) && (uint8(row) < MaxBoardSize) {
 		return fmt.Sprintf("%d", row+1)
 	}
 	return "?"
 }
+
+// ColSize and RowSize are types that represent the column and row dimensions of the board
+type ColSize uint8
+type RowSize uint8
 
 // TODO:(align) if alignment in 6g compiler is improved, go back to using this:
 
@@ -390,8 +394,8 @@ type Board struct {
 	// moves of the game, including setup
 	movs []MoveRecord
 	// board size
-	colSize ColValue
-	rowSize RowValue
+	colSize ColSize
+	rowSize RowSize
 	// terms of play
 	handi uint8
 	komi  float32
@@ -421,7 +425,7 @@ func (brd *Board) GetNMoves() int {
 }
 
 // setSize sets the size of the board, and calls initBoardPoints
-func (abhr *AbstHier) setSize(csz ColValue, rsz RowValue) {
+func (abhr *AbstHier) setSize(csz ColSize, rsz RowSize) {
 	abhr.colSize = csz
 	abhr.rowSize = rsz
 	for t := T_FIRST; t <= T_LAST; t += 1 {
@@ -444,7 +448,7 @@ func (abhr *AbstHier) addHoshiPt(c ColValue, r RowValue) {
 func (brd *Board) OnBoard(nl NodeLoc) (ret bool) {
 	c, r := GetColRow(nl)
 	//    fmt.Printf(" c = %d, brd.colSize = %d. r = %d, brd.rowSize = %d\n", c, brd.colSize, r, brd.rowSize)
-	if (c < brd.colSize) && (r < brd.rowSize) {
+	if (ColSize(c) < brd.colSize) && (RowSize(r) < brd.rowSize) {
 		ret = true
 	}
 	return ret
@@ -808,7 +812,7 @@ func (abhr *AbstHier) DoBoardMove(nl NodeLoc, color PointStatus, doPlay bool) (m
 }
 
 // GetSize returns the column and row sizes of the Board
-func (abhr *AbstHier) GetSize() (ColValue, RowValue) {
+func (abhr *AbstHier) GetSize() (ColSize, RowSize) {
 	return abhr.colSize, abhr.rowSize
 }
 
@@ -903,8 +907,8 @@ func (abhr *AbstHier) EachNode(gl GraphLevel, Visit GraphNodeLocFunc) {
 		var c ColValue
 		var r RowValue
 		nc, nr := abhr.GetSize()
-		for r = 0; r < nr; r++ {
-			for c = 0; c < nc; c++ {
+		for r = 0; RowSize(r) < nr; r++ {
+			for c = 0; ColSize(c) < nc; c++ {
 				Visit(&abhr.Graphs[PointLevel], MakeNodeLoc(c, r))
 			}
 		}

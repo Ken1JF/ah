@@ -91,22 +91,22 @@ var TransPreservesHandicapPattern = [6][8]bool{
 // IsCanonical tests if a point is in the 1/8 th of the board with lowest coordinates:
 func (abhr *AbstHier) IsCanonical(nl NodeLoc, hs HandicapSymmetry) (ret bool) {
 	ncols, nrows := abhr.GetSize()
-	midRow := (nrows - 1) / 2
-	midCol := (ncols - 1) / 2
+	midRow := RowValue(nrows-1) / 2
+	midCol := ColValue(ncols-1) / 2
 	col, row := GetColRow(nl)
 	switch hs {
 	case EIGHT_WAY_SYMMETRY: // one eighth of board + 7 imaage
-		ret = (row <= midRow) && (col >= ColValue(nrows-(row+1))) // top half of board AND right of diagonal
+		ret = (row <= midRow) && (col >= ColValue(nrows-RowSize(row+1))) // top half of board AND right of diagonal
 	case TWO_DIAGONAL_SYMMETRY: // right side of board + 3 images
 		if row <= midRow {
-			ret = (col >= ColValue(nrows-(row+1)))
+			ret = (col >= ColValue(nrows-RowSize(row+1)))
 		} else {
 			ret = (col >= ColValue(row))
 		}
 	case TWO_CENTER_LINE_SYMMETRY: // upper right corrner + 3 images
 		ret = (row <= midRow) && (col >= midCol) // top half of board AND right half of board
 	case FLIP_VERT_SYMMETRY: // one half of board + 1 image
-		ret = (col >= ColValue(nrows-(row+1)))
+		ret = (col >= ColValue(nrows-RowSize(row+1)))
 	case FLIP_BACK_SYMMETRY:
 		ret = (col >= ColValue(row))
 	}

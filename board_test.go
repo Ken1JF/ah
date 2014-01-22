@@ -210,6 +210,8 @@ func ExampleAhTypeSizes() {
 	// Type PointType size 1 alignment 1
 	// Type ColValue size 1 alignment 1
 	// Type RowValue size 1 alignment 1
+	// Type ColSize size 1 alignment 1
+	// Type RowSize size 1 alignment 1
 	// Type NodeLoc size 2 alignment 2
 	// Type NodeLocList size 24 alignment 8
 	// Type MoveRecord size 14 alignment 2

@@ -196,9 +196,11 @@ func (g *Graph) clearGraph(gl GraphLevel, cHi CompStateFunc, cNw CompStateFunc, 
 // initBoardPoints() must be called before using a Board.
 // currently called by setSize().
 // initBoardPoints sets the static point type in inList
-func (brd *Graph) initBoardPoints(colSize ColValue, rowSize RowValue) {
+func (brd *Graph) initBoardPoints(csz ColSize, rsz RowSize) {
 	var c ColValue
 	var r RowValue
+	colSize := ColValue(csz)
+	rowSize := RowValue(rsz)
 	nl := MakeNodeLoc(colSize-1, rowSize-1)
 	brd.Nodes = make([]GraphNode, int(nl+1))
 	// Set the default point type and ptCol, ptRow:

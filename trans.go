@@ -73,7 +73,8 @@ var ComposeTrans = [8][8]BoardTrans{
 
 func (abhr *AbstHier) TransNodeLoc(t BoardTrans, c ColValue, r RowValue) (newNode NodeLoc) {
 	newNode = PassNodeLoc
-	nc, nr := abhr.GetSize()
+	ncz, nrz := abhr.GetSize()
+	nc, nr := ColValue(ncz), RowValue(nrz)
 	if (c < nc) && (r < nr) { // check if OnBoard
 		switch t {
 		case T_IDENTITY:
@@ -107,8 +108,8 @@ func (abhr *AbstHier) TransBoard(t BoardTrans) *AbstHier {
 	nCols, nRows := abhr.GetSize()
 	newAH = newAH.InitAbstHier(nCols, nRows, abhr.updtLev, true)
 	newBrd := &newAH.Graphs[PointLevel]
-	for row = 0; row < nRows; row++ {
-		for col = 0; col < nCols; col++ {
+	for row = 0; RowSize(row) < nRows; row++ {
+		for col = 0; ColSize(col) < nCols; col++ {
 			newNode := abhr.TransNodeLoc(t, col, row)
 			newBrd.Nodes[newNode].SetNodeLowState(brd.Nodes[MakeNodeLoc(col, row)].GetNodeLowState())
 		}

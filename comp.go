@@ -504,7 +504,7 @@ func OppositeColor(c PointStatus) (ret PointStatus) {
 }
 
 // InitAbstHier must be called before a abstraction hierarchy can be used
-func (abhr *AbstHier) InitAbstHier(c ColValue, r RowValue, upLev GraphLevel, doPlay bool) *AbstHier {
+func (abhr *AbstHier) InitAbstHier(c ColSize, r RowSize, upLev GraphLevel, doPlay bool) *AbstHier {
 	defer un(trace("InitAbstHier", 0, NilNodeLoc, 0, NilNodeLoc, nilArc, 0xFFFF))
 	// turn off tracing during InitAbstHi
 	saveTrace := TraceAH

@@ -259,47 +259,50 @@ func (abhr *AbstHier) PrintAbstHier(str string, printUnocc bool) {
 
 // set the hoshi points based on board size
 func (abhr *AbstHier) initHoshiPts() {
+	// Get board sizes, as values:
+	colsz := ColValue(abhr.colSize)
+	rowsz := RowValue(abhr.rowSize)
 	// Set the hoshi points:
-	if (abhr.colSize >= 13) && (abhr.rowSize >= 13) {
+	if (colsz >= 13) && (rowsz >= 13) {
 		// Set hoshi points on the fourth line.
 
 		// Set the corner hoshi points:
 		abhr.addHoshiPt(3, 3)
-		abhr.addHoshiPt(abhr.colSize-4, 3)
-		abhr.addHoshiPt(abhr.colSize-4, abhr.rowSize-4)
-		abhr.addHoshiPt(3, abhr.rowSize-4)
+		abhr.addHoshiPt(colsz-4, 3)
+		abhr.addHoshiPt(colsz-4, rowsz-4)
+		abhr.addHoshiPt(3, rowsz-4)
 		// Set the center hoshi point, if there is one:
-		if ((abhr.colSize & 1) == 1) && ((abhr.rowSize & 1) == 1) {
-			abhr.addHoshiPt(abhr.colSize/2, abhr.rowSize/2)
+		if ((colsz & 1) == 1) && ((rowsz & 1) == 1) {
+			abhr.addHoshiPt(colsz/2, rowsz/2)
 		}
 		// Set the Side hoshi points, if there are any:
-		if (abhr.colSize >= 15) && ((abhr.colSize & 1) == 1) {
+		if (colsz >= 15) && ((colsz & 1) == 1) {
 			// Set the upper and lower side hoshi points:
-			abhr.addHoshiPt(abhr.colSize/2, 3)
-			abhr.addHoshiPt(abhr.colSize/2, abhr.rowSize-4)
+			abhr.addHoshiPt(colsz/2, 3)
+			abhr.addHoshiPt(colsz/2, rowsz-4)
 		}
-		if (abhr.rowSize >= 15) && ((abhr.rowSize & 1) == 1) {
+		if (rowsz >= 15) && ((rowsz & 1) == 1) {
 			// Set the left and right side hoshi points:
-			abhr.addHoshiPt(3, abhr.rowSize/2)
-			abhr.addHoshiPt(abhr.colSize-4, abhr.rowSize/2)
+			abhr.addHoshiPt(3, rowsz/2)
+			abhr.addHoshiPt(colsz-4, rowsz/2)
 		}
 	}
-	if (abhr.colSize <= 11) && (abhr.rowSize <= 11) {
+	if (colsz <= 11) && (rowsz <= 11) {
 		// Set hoshi points on the third line.
-		if (abhr.colSize >= 7) && (abhr.rowSize >= 7) {
+		if (colsz >= 7) && (rowsz >= 7) {
 			// Set the corner points:
 			abhr.addHoshiPt(2, 2)
-			abhr.addHoshiPt(abhr.colSize-3, 2)
-			abhr.addHoshiPt(abhr.colSize-3, abhr.rowSize-3)
-			abhr.addHoshiPt(2, abhr.rowSize-3)
+			abhr.addHoshiPt(colsz-3, 2)
+			abhr.addHoshiPt(colsz-3, rowsz-3)
+			abhr.addHoshiPt(2, rowsz-3)
 		}
 		// Set the center hoshi point if there is one:
-		if (abhr.colSize >= 9) && (abhr.rowSize >= 9) {
-			if ((abhr.colSize & 1) == 1) && ((abhr.rowSize & 1) == 1) {
-				abhr.addHoshiPt(abhr.colSize/2, abhr.rowSize/2)
+		if (colsz >= 9) && (rowsz >= 9) {
+			if ((colsz & 1) == 1) && ((rowsz & 1) == 1) {
+				abhr.addHoshiPt(colsz/2, rowsz/2)
 			}
-		} else if (abhr.colSize == 5) && (abhr.rowSize == 5) {
-			abhr.addHoshiPt(abhr.colSize/2, abhr.rowSize/2)
+		} else if (colsz == 5) && (rowsz == 5) {
+			abhr.addHoshiPt(colsz/2, rowsz/2)
 		}
 	}
 	if len(abhr.hoshiPts) > 0 {
@@ -312,7 +315,7 @@ var saveAHTrace bool               // TODO: make these parser instance variables
 
 // setupAbstHier either clears an existing AH, or allocates and initializes a new AH.
 // It is called by InitAbstHier
-func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev GraphLevel, doPlay bool,
+func (abhr *AbstHier) setupAbstHier(colSize ColSize, rowSize RowSize, upLev GraphLevel, doPlay bool,
 	brdCHi CompStateFunc, brdCNw CompStateFunc,
 	strCHi CompStateFunc, strCNw CompStateFunc,
 	blkCHi CompStateFunc, blkCNw CompStateFunc,
@@ -399,8 +402,8 @@ func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev Gr
 			//			TraceAH = false
 			var c ColValue
 			var r RowValue
-			for r = 0; r < rowSize; r++ {
-				for c = 0; c < colSize; c++ {
+			for r = 0; RowSize(r) < rowSize; r++ {
+				for c = 0; ColSize(c) < colSize; c++ {
 					nl := MakeNodeLoc(c, r)
 					abhr.AddMember(PointLevel, nl, hiG.initNode)
 				}
@@ -414,8 +417,8 @@ func (abhr *AbstHier) setupAbstHier(colSize ColValue, rowSize RowValue, upLev Gr
 			//				TraceAH = false
 			//			}
 			// Change the nodes to their initial states
-			for r = 0; r < rowSize; r++ {
-				for c = 0; c < colSize; c++ {
+			for r = 0; RowSize(r) < rowSize; r++ {
+				for c = 0; ColSize(c) < colSize; c++ {
 					nl := MakeNodeLoc(c, r)
 					hiSt := brdCHi(abhr, PointLevel, nl, uint16(Unocc))
 					abhr.ChangeNodeState(PointLevel, nl, NodeStatus(hiSt), true)
@@ -895,6 +898,8 @@ func PrintAhTypeSizes() {
 	var pt PointType
 	var cv ColValue
 	var rv RowValue
+	var csz ColSize
+	var rsz RowSize
 	var nl NodeLoc
 	var nll NodeLocList
 	var m MoveRecord
@@ -907,6 +912,8 @@ func PrintAhTypeSizes() {
 	printSizeAlign("PointType", unsafe.Sizeof(pt), unsafe.Alignof(pt))
 	printSizeAlign("ColValue", unsafe.Sizeof(cv), unsafe.Alignof(cv))
 	printSizeAlign("RowValue", unsafe.Sizeof(rv), unsafe.Alignof(rv))
+	printSizeAlign("ColSize", unsafe.Sizeof(csz), unsafe.Alignof(csz))
+	printSizeAlign("RowSize", unsafe.Sizeof(rsz), unsafe.Alignof(rsz))
 	printSizeAlign("NodeLoc", unsafe.Sizeof(nl), unsafe.Alignof(nl))
 	printSizeAlign("NodeLocList", unsafe.Sizeof(nll), unsafe.Alignof(nll))
 	printSizeAlign("MoveRecord", unsafe.Sizeof(m), unsafe.Alignof(m))
