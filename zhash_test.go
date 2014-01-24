@@ -2,7 +2,7 @@ package ah_test
 
 import (
 	"fmt"
-	. "gitHub.com/Ken1JF/ahgo/ah"
+	. "."
 )
 
 func ExamplePrintZKeys() {

@@ -3,7 +3,7 @@ package ah_test
 import (
 	//    "testing"
 	"fmt"
-	. "gitHub.com/Ken1JF/ahgo/ah"
+	. "."
 )
 
 func ExampleDirection() {
