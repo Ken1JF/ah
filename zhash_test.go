@@ -1,8 +1,8 @@
 package ah_test
 
 import (
-	"fmt"
 	. "."
+	"fmt"
 )
 
 func ExamplePrintZKeys() {

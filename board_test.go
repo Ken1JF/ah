@@ -2,8 +2,8 @@ package ah_test
 
 import (
 	//    "testing"
-	"fmt"
 	. "."
+	"fmt"
 )
 
 func ExampleDirection() {
