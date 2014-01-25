@@ -28,3 +28,5 @@ The ah package contains the following files:
 	trans.go		- transformations (rotations and reflections) of boards
 	update.go		- the Go abstraction hierarchy and the update algorithm
 	zhash.go		- Zobrist hashing to detect duplicate positions
+
+Note: Githup commits are checked by Travis CL
