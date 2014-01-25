@@ -10,4 +10,4 @@ before_install:
   - go get github.com/mattn/goveralls
 script:
   - $HOME/gopath/bin/gom install -x
-  - if ["x`go version | awk -F' ' '{print $3}'`" -ne "xgo1.1"]; then go test -cover; fi
+  - if [ "x`go version | awk -F' ' '{print $3}'`" != "xgo1.1" ]; then $HOME/gopath/bin/gom test -cover; fi
