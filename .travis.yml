@@ -1,0 +1,13 @@
+language: go
+go:
+  - tip
+  - go1.2
+  - go1.1
+before_install:
+  - go get github.com/mattn/gom
+  - go get code.google.com/p/go.tools/cmd/cover
+  - go get github.com/axw/gocov/gocov
+  - go get github.com/mattn/goveralls
+script:
+  - $HOME/gopath/bin/gom install -x
+  - go test -cover
