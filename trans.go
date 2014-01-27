@@ -1,5 +1,5 @@
 /*
- *  File:		src/gitHub.com/Ken1JF/ah/trans.go
+ *  File:		src/github.com/Ken1JF/ah/trans.go
  *  Project:	abst-hier
  *
  *  Created by Ken Friedenbach on 2/16/10.

@@ -1,5 +1,5 @@
 /*
- *	File:		src/gitHub.com/Ken1JF/ah//gostrings.go
+ *	File:		src/github.com/Ken1JF/ah//gostrings.go
  *  Project:	abst-hier
  *
  *  Created by Ken Friedenbach on 03/28/2010.

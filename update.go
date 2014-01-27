@@ -1,5 +1,5 @@
 /*
- *  File:		src/gitHub.com/Ken1JF/ah/update.go
+ *  File:		src/github.com/Ken1JF/ah/update.go
  *  Project:	abst-hier
  *
  *  Created by Ken Friedenbach on 2/10/10.
