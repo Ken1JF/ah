@@ -1,5 +1,5 @@
 /*
- *	File:       src/gitHub.com/Ken1JF/ahgo/ah/board.go
+ *	File:       src/gitHub.com/Ken1JF/ah/board.go
  *  Project:    ahgo
  *
  *  Created by Ken Friedenbach on 12/08/09.

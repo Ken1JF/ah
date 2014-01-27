@@ -1,5 +1,5 @@
 /*
- *  File:		src/gitHub.com/Ken1JF/ahgo/ah/errors.go
+ *  File:		src/gitHub.com/Ken1JF/ah/errors.go
  *  Project:	abst-hier
  *
  *  Created by Ken Friedenbach on 12/08/09.

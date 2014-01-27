@@ -1,5 +1,5 @@
 /*
- *	File:		src/gitHub.com/Ken1JF/ahgo/ah/zhash.go
+ *	File:		src/gitHub.com/Ken1JF/ah/zhash.go
  *  Project:	abst-hier
  *
  *  Created by Ken Friedenbach on 12/24/2010.

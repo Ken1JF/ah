@@ -1,5 +1,5 @@
 /*
- *	File:		src/gitHub.com/Ken1JF/ahgo/ah/comp.go
+ *	File:		src/gitHub.com/Ken1JF/ah/comp.go
  *  Project:	abst-hier
  *
  *  Created by Ken Friedenbach on 3/03/2010.

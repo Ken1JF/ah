@@ -1,5 +1,5 @@
 /*
- *	File:		src/gitHub.com/Ken1JF/ahgo/ah/patterns.go
+ *	File:		src/gitHub.com/Ken1JF/ah/patterns.go
  *  Project:	abst-hier
  *
  *  Created by Ken Friedenbach on 12/25/2010.
